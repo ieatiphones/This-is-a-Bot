@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+        <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+        <title>This is a bot Docs</title>
+
+        <link rel="stylesheet" type="text/css" href="./css/docs.css">
+        <script src="./js/docs.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+    </head>
+    <body>
+        <div class="top-div">
+            <img src="/assets/boticon.png" alt="This is a bot's icon" class="bot-icon">
+            <h1 class="bot-name">This is a bot</h1>
+            <h1 class="page-name">Api Docs</h1>
+        </div>
+        <div class="bottom-div">
+            <div class="call-category">
+                <h1 class="name">stats</h1>
+            </div>
+            <div class="call-container">
+                <div class="method type-get">
+                    <h1 class="title">GET stats/stats</h1>
+                    <p class="url">URL: http://fizzyapple12.cf:86/api/stats/stats/{UserID}</p>
+                </div>
+                <div class="function">
+                    <h1 class="title">Function:</h1>
+                    <p class="description">Gets the stats stored in This is a bot for a user.</p>
+                </div>
+                <div class="parameters">
+                    <h1 class="title">Parameters:</h1>
+                    <table class="parameter-table">
+                        <tr>
+                            <th class="name">Name</th>
+                            <th class="type">Type</th>
+                            <th class="description">Description</th>
+                        </tr>
+                        <tr>
+                            <td class="name">UserID</td>
+                            <td class="type">string</td>
+                            <td class="description">Discord's ID for the user you want to retrieve stats for.</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="returns">
+                    <h1 class="title">Returns:</h1>
+                    <table class="returns-table">
+                        <tr>
+                            <th class="code">Code</th>
+                            <th class="description">Description</th>
+                        </tr>
+                        <tr>
+                            <td class="code">200</td>
+                            <td class="description">This is a bot found the stats and sent them over in the response body.</td>
+                        </tr>
+                        <tr>
+                            <td class="code">404</td>
+                            <td class="description">This is a bot could not find stats for the user specified.</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="examples">
+                    <h1 class="title">Examples:</h1>
+                    <p class="example"></p>
+                    <table class="examples-table">
+                        <tr>
+                            <th class="url">URL</th>
+                            <th class="action">Action</th>
+                        </tr>
+                        <tr>
+                            <td class="url">http://fizzyapple12.cf:86/api/stats/stats/460891988191870976</td>
+                            <td class="action">Gets This is a bot's stats.</td>
+                        </tr>
+                        <tr>
+                            <td class="url">http://fizzyapple12.cf:86/api/stats/stats/313385355049041921</td>
+                            <td class="action">Gets FizzyApple12's stats.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="call-container">
+                <div class="method type-get">
+                    <h1 class="title">GET stats/card</h1>
+                    <p class="url">URL: http://fizzyapple12.cf:86/api/stats/card/{UserID}</p>
+                </div>
+                <div class="function">
+                    <h1 class="title">Function:</h1>
+                    <p class="description">Gets the stats card stored in This is a bot for a user.</p>
+                </div>
+                <div class="parameters">
+                    <h1 class="title">Parameters:</h1>
+                    <table class="parameter-table">
+                        <tr>
+                            <th class="name">Name</th>
+                            <th class="type">Type</th>
+                            <th class="description">Description</th>
+                        </tr>
+                        <tr>
+                            <td class="name">UserID</td>
+                            <td class="type">string</td>
+                            <td class="description">Discord's ID for the user you want to retrieve stats card for.</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="returns">
+                    <h1 class="title">Returns:</h1>
+                    <table class="returns-table">
+                        <tr>
+                            <th class="code">Code</th>
+                            <th class="description">Description</th>
+                        </tr>
+                        <tr>
+                            <td class="code">200</td>
+                            <td class="description">This is a bot found the stats card and sent it over in the response body in the form of an embed.</td>
+                        </tr>
+                        <tr>
+                            <td class="code">404</td>
+                            <td class="description">This is a bot could not find stats card for the user specified.</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="examples">
+                    <h1 class="title">Examples:</h1>
+                    <p class="example"></p>
+                    <table class="examples-table">
+                        <tr>
+                            <th class="url">URL</th>
+                            <th class="action">Action</th>
+                        </tr>
+                        <tr>
+                            <td class="url">http://fizzyapple12.cf:86/api/stats/card/460891988191870976</td>
+                            <td class="action">Gets This is a bot's stats card.</td>
+                        </tr>
+                        <tr>
+                            <td class="url">http://fizzyapple12.cf:86/api/stats/card/313385355049041921</td>
+                            <td class="action">Gets FizzyApple12's stats card.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+        <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+        <title>This is a bot</title>
+
+        <% if (SessionID != null) { %>
+            <script>
+                localStorage.setItem("SessionID", "<%= SessionID %>");
+                window.location.href = 'http://thisisabot.com';
+            </script>
+        <% } %>
+
+        <link rel="stylesheet" type="text/css" href="./css/index.css">
+        <script src="./js/panel.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+
+        <script>
+            var showdownOpts = {
+                'omitExtraWLInCodeBlocks': true,
+                'noHeaderId': false,
+                'parseImgDimensions': true,
+                'simplifiedAutoLink': true,
+                'literalMidWordUnderscores': true,
+                'strikethrough': true,
+                'tables': true,
+                'tablesHeaderId': false,
+                'ghCodeBlocks': false,
+                'tasklists': true,
+                'smoothLivePreview': false,
+                'prefixHeaderId': false,
+                'disableForced4SpacesIndentedSublists': false,
+                'ghCompatibleHeaderId': false,
+                'smartIndentationFix': false
+            };
+
+            var motdRender = () => {
+                var converter = new showdown.Converter(showdownOpts);
+                document.getElementsByClassName("motd")[0].innerHTML = converter.makeHtml('<%- motd %>');
+            }
+        </script>
+    </head>
+    <body>
+        <div class="top-div">
+            <img src="/assets/boticon.png" alt="This is a bot's icon" class="bot-icon" onclick="untransform()">
+            <h1 class="bot-name">This is a bot</h1>
+            <h2 class="bot-description">FizzyApple12's cool bot!</h2>
+            <button class="user-button">Log in</button>
+        </div>
+        <div class="bottom-div">
+            <button class="join-button" onclick="window.location.href='https://discordapp.com/oauth2/authorize?client_id=460891988191870976&permissions=8&scope=bot'">Invite Me!</button>
+            <button class="panel-button" onclick="transform()">Web Panel</button>
+            <div class="info-div">
+                <p class="motd"></p>
+            </div>
+            <div class="servers-div" style="display: none;">
+                <p class="no-servers-text">No servers here...</p>
+            </div>
+            <div class="server-editor" style="display: none; opacity: 0;"></div>
+        </div>
+    </body>
+</html>

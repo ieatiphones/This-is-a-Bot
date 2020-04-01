@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+		<link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+		<link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+        <title>This is a bot Control Panel</title>
+
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+				background-color: #000000;
+				font-family: "Gravity";
+            }
+
+            .console-area {
+                position: absolute;
+                left: 300px;
+                width: calc(100% - 300px);
+                height: 100vh;
+                overflow-x: hidden;
+                overflow-y: scroll;
+                resize: none;
+                background-color: #00000000;
+                color: #ffffff;
+                margin: 0;
+				font-family: "Consolas";
+				border-left: 3px solid #ffffff;
+				padding-left: 10px;
+            }
+
+			.head-text {
+				position: absolute;
+				color: #ffffff;
+				font-family: "Gravity";
+				margin: 0px;
+				font-size: 52px;
+				top: 10px;
+				left: 15px;
+			}
+
+			.action-button {
+				position: absolute;
+				width: 280px;
+				left: 10px;
+			}
+
+			.info-text {
+				position: absolute;
+				left: 10px;
+				color: #ffffff;
+				margin: 0px;
+				font-family: "Gravity-Regular";
+			}
+				
+            @font-face {
+                font-family: "Gravity";
+                src: url("./assets/Gravity-UltraLight.otf") format("opentype");
+			}
+			
+            @font-face {
+                font-family: "Gravity-Regular";
+                src: url("./assets/Gravity-Regular.otf") format("opentype");
+			}
+        </style>
+
+        <script src="https://cdn.jsdelivr.net/npm/ansi_up@4.0.3/ansi_up.js"></script>
+        <script>
+            var ipcRenderer = require('electron').ipcRenderer;
+            var ansi_up = new AnsiUp; 
+
+            ipcRenderer.on('input', (event, input) => {
+                document.getElementsByClassName("console-area")[0].innerHTML += ansi_up.ansi_to_html(input);
+                document.getElementsByClassName("console-area")[0].scrollTop = document.getElementsByClassName("console-area")[0].scrollHeight;
+			});
+
+			ipcRenderer.on('status', (event, input) => {
+				document.getElementsByClassName("info-text")[0].innerHTML = "Status: " + input;
+			});
+
+			ipcRenderer.on('uptime', (event, input) => {
+				if (input == "Unknown") {
+					document.getElementsByClassName("info-text")[1].innerHTML = "Uptime: " + input;
+					return;
+				}
+
+        		var seconds = parseInt((input / 1000) % 60)
+        		var minutes = parseInt((input / (1000 * 60)) % 60)
+        		var hours = parseInt((input / (1000 * 60 * 60)) % 24);
+
+    			hours = (hours < 10) ? "0" + hours : hours;
+    			minutes = (minutes < 10) ? "0" + minutes : minutes;
+				seconds = (seconds < 10) ? "0" + seconds : seconds;
+				
+				document.getElementsByClassName("info-text")[1].innerHTML = `Uptime: ${hours}:${minutes}:${seconds}`;
+			});
+			
+			var action = (type, input) => {
+				ipcRenderer.send(type, input);
+			}
+
+			setInterval(() => {
+				document.getElementsByClassName("console-area")[0].innerHTML = "";
+			}, 3600000);
+        </script>
+    </head>
+
+    <body>
+        <pre class="console-area" placeholder="waiting for process..." readonly></pre>
+		<h1 class="head-text">This is a bot</h1>
+		<p class="info-text" style="top: 75px;">Status: Unknown</p>
+		<p class="info-text" style="top: 100px;">Uptime: Unknown</p>
+		<button class="action-button" style="top: calc(100% - 75px);" onclick="action('start', '')">Start</button>
+		<button class="action-button" style="top: calc(100% - 50px);" onclick="action('restart', '')">Restart</button>
+		<button class="action-button" style="top: calc(100% - 25px);" onclick="action('stop', '')">Stop</button>
+    </body>
+
+</html>
