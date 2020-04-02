@@ -13,7 +13,11 @@ global.appRoot = __dirname
 global.appMain = __filename
 
 var music = require('./music.js');
-music.init();
+try {
+    music.init();
+} catch (e) {
+    console.log("Could not init music");
+}
 
 var express = require('express');
 var app = express();
