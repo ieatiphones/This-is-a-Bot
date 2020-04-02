@@ -513,7 +513,8 @@
         "\"Beep. Boop.\"<br>\t-This is a bot",
         "![Hmm](https://i.kym-cdn.com/photos/images/original/001/151/543/119.jpg)",
         "![Threat level tank](https://cdn.discordapp.com/attachments/337779388349284352/583439074094874624/Threat_level_tank.gif)",
-        "Pokémon games are the best."
+        "Pokémon games are the best.",
+        "Now with GitHub"
     ],
     "mongodb": {
         "dbUrl": "mongodb://192.168.1.54:27017",
