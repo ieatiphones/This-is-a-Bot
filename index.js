@@ -12,8 +12,9 @@ const readline = require('readline');
 global.appRoot = __dirname
 global.appMain = __filename
 
-var music = require('./music.js');
+var music;
 try {
+    music = require('./music.js');
     music.init();
 } catch (e) {
     console.log("Could not init music");
