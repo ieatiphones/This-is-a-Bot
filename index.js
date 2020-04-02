@@ -355,7 +355,7 @@ bot.on('messageReactionAdd', (reaction, user) => {
 
 bot.on('guildMemberAdd', async member => {
     try {
-        var currentServerConfig = await serverPrefs.findOne({ id: msg.guild.id });
+        var currentServerConfig = await serverPrefs.findOne({ id: member.guild.id });
         if (!currentServerConfig) return;
         var verificationID = makeVerifictionid();
 
