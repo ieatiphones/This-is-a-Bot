@@ -516,7 +516,7 @@
         "Pokémon games are the best."
     ],
     "mongodb": {
-        "dbUrl": "mongodb://localhost:27017",
+        "dbUrl": "mongodb://192.168.1.54:27017",
         "dbName": "this_is_a_bot",
         "statsDB": "stats",
         "serverPrefsDB": "serverPrefs",
