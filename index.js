@@ -1,12 +1,13 @@
 const Discord = require('discord.js');
 global.bot = new Discord.Client();
 const config = new require('./config.json');
+const configPrivate = new require('./configPrivate.json');
 const fs = require('fs');
 const readline = require('readline');
 
-const IIEconfig = new require('./config.json');
-const IIE = require('./innerImageEditor/index.js');
-IIE.init();
+// const IIEconfig = new require('./config.json');
+// const IIE = require('./innerImageEditor/index.js');
+// IIE.init();
 
 global.appRoot = __dirname
 global.appMain = __filename
@@ -21,14 +22,21 @@ var server = http.Server(app);
 const btoa = require('btoa');
 var fetch = require('node-fetch');
 
-const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
-const stat = low(new FileSync('stats.json'))
-stat.defaults({ messagesSeen: 0, messagesProcessed: 0, users: [] }).write();
-const serverPrefs = low(new FileSync('serverPrefs.json'))
-serverPrefs.defaults({ servers: [] }).write();
-const webPanelUsers = low(new FileSync('webPanelUsers.json'))
-webPanelUsers.defaults({ users: [] }).write();
+const MongoClient = require('mongodb').MongoClient;
+var mongoDB;
+var stat;
+var serverPrefs;
+var webPanelUsers;
+
+MongoClient.connect(config.mongodb.dbUrl, { useUnifiedTopology: true }, (err, client) => {
+    if (err) return;
+    console.log('Conencted to MongoDB');
+
+    mongoDB = client.db(config.mongodb.dbName);
+    stat = mongoDB.collection(config.mongodb.statsDB);
+    serverPrefs = mongoDB.collection(config.mongodb.serverPrefsDB);
+    webPanelUsers = mongoDB.collection(config.mongodb.webPanelUsersDB);
+});
 
 bot.generalCommands = new Discord.Collection();
 bot.ownerCommands = new Discord.Collection();
@@ -119,72 +127,122 @@ bot.on('message', async (msg) => {
     }
 
     try {
-        var currentServerConfig = serverPrefs.get("servers").find(server => server.id == msg.guild.id).value();
-
-        if (currentServerConfig && currentServerConfig.config.verificationChannel.set) {
-            verifications.forEach((userVer, index) => {
-                if (userVer.aid == msg.author.id) {
-                    if (msg.content.toLowerCase() == userVer.vid) {
-                        verifications.splice(index, 1);
-                        msg.reply("Verified! Have fun at **" + currentServerConfig.name + "**");
-                        msg.member.removeRole(msg.guild.roles.get(currentServerConfig.config.verificationChannel.roleid));
-                        if (currentServerConfig.config.verificationChannel.finalroleid != null) msg.member.addRole(msg.guild.roles.get(currentServerConfig.config.verificationChannel.finalroleid));
-                    } else {
-                        msg.member.removeRole(msg.guild.roles.get(currentServerConfig.config.verificationChannel.roleid));
-                        var utk = msg.guild.members.find(member => member.id == msg.author.id);
-                        if (utk && utk != null) utk.kick("Didn't pass verification.");
-                        verifications.splice(index, 1);
+        var currentServerConfig = await serverPrefs.findOne({ id: msg.guild.id });
+        if (currentServerConfig) {
+            if (currentServerConfig.config.verificationChannel.set) {
+                verifications.forEach((userVer, index) => {
+                    if (userVer.aid == msg.author.id) {
+                        if (msg.content.toLowerCase() == userVer.vid) {
+                            verifications.splice(index, 1);
+                            msg.reply("Verified! Have fun at **" + currentServerConfig.name + "**");
+                            msg.member.removeRole(msg.guild.roles.get(currentServerConfig.config.verificationChannel.roleid));
+                            if (currentServerConfig.config.verificationChannel.finalroleid != null) msg.member.addRole(msg.guild.roles.get(currentServerConfig.config.verificationChannel.finalroleid));
+                        } else {
+                            msg.member.removeRole(msg.guild.roles.get(currentServerConfig.config.verificationChannel.roleid));
+                            var utk = msg.guild.members.find(member => member.id == msg.author.id);
+                            if (utk && utk != null) utk.kick("Didn't pass verification.");
+                            verifications.splice(index, 1);
+                        }
                     }
+                });
+            }
+
+            if (currentServerConfig.config.locked) {
+                msg.delete();
+                return;
+            }
+        } else {
+            serverPrefs.insertOne({
+                "id": msg.guild.id,
+                "name": msg.guild.name,
+                "config": {
+                    "moderatorRoles": {
+                        "set": false,
+                        "ids": []
+                    },
+                    "verificationChannel": {
+                        "set": false,
+                        "channelid": "",
+                        "roleid": "",
+                        "finalroleid": "",
+                        "func": null
+                    },
+                    "welcomeChannel": {
+                        "set": false,
+                        "id": "",
+                        "func": null
+                    },
+                    "locked": false
                 }
             });
-        }
-
-        if (currentServerConfig.config.locked) {
-            msg.delete();
-            msg.channel.send("```diff\n- !!!SERVER LOCKDOWN!!! -\n- MESSAGE NOT PERMITTED -\n```");
-            return;
         }
     } catch (e) {
         console.log("Server config not found!");
     }
 
     try {
-        if (stat.get("users").find(user => user.id == msg.author.id).value()) {
-            stat.get("users").find(user => user.id == msg.author.id).update("xp", n => n + msg.content.length).write();
-            var userstats = stat.get("users").find(user => user.id == msg.author.id).value();
-            stat.get("users").find(user => user.id == msg.author.id).update("username", n => { return msg.author.username }).write();
-            stat.get("users").find(user => user.id == msg.author.id).update("iconurl", n => { return msg.author.avatarURL }).write();
-            if (userstats.xp >= (userstats.level * config.xpCoefficient)) {
-                stat.get("users").find(user => user.id == msg.author.id).update("xp", n => n - (userstats.level * config.xpCoefficient)).write();
-                stat.get("users").find(user => user.id == msg.author.id).update("level", n => n + 1).write()
-                recursiveLevelUp(msg);
+        stat.findOne({ id: msg.author.id }, (err, res) => {
+            if (err) return;
+            if (res) {
+                var rank = res.rank;
+                var xp = res.xp + msg.content.length;
+                var level = res.level;
+
+                var lup = recursiveLevelUp(xp, level);
+                xp = lup[0];
+                level = lup[1];
+
+                config.rankProgression.forEach(rank => {
+                    if (res.level >= rank.startLevel)
+                        rank = rank.levelName;
+                });
+
+                stat.updateOne({ id: msg.author.id }, {
+                    $set: {
+                        xp: xp,
+                        level: level,
+                        username: msg.author.username,
+                        iconurl: msg.author.avatarURL,
+                        rank: rank
+                    }
+                });
+            } else {
+                stat.insertOne({
+                    id: msg.author.id,
+                    level: 1,
+                    xp: msg.content.length,
+                    rank: "Newbie",
+                    rankSP: "",
+                    color: 0,
+                    quote: "You can set your quote by using $quote",
+                    username: msg.author.username,
+                    iconurl: msg.author.avatarURL
+                });
             }
-            config.rankProgression.forEach(rank => {
-                if (userstats.level >= rank.startLevel)
-                    userstats.rank = rank.levelName;
-            });
-            stat.get("users").find(user => user.id == msg.author.id).set("rank", userstats.rank).write();
-        } else {
-            stat.get("users").push({
-                id: msg.author.id,
-                level: 1,
-                xp: msg.content.length,
-                rank: "Newbie",
-                rankSP: "",
-                color: 0,
-                quote: "You can set your quote by using $quote",
-                username: msg.author.username,
-                iconurl: msg.author.avatarURL
-            }).write();
-        }
+        });
     } catch (e) {
         console.log("User stats error!");
+        console.log(e)
     }
 
     try {
-        stat.update("messagesSeen", n => n + 1).write();
-
-        if (msg.content.startsWith(config.prefix)) stat.update("messagesProcessed", n => n + 1).write();
+        stat.findOne({ type: "BOTPRIV" }, (err, res) => {
+            if (err) return;
+            if (res) {
+                stat.updateOne({ type: "BOTPRIV" }, {
+                    $inc: {
+                        messagesProcessed: (msg.content.startsWith(config.prefix)) ? 1 : 0,
+                        messagesSeen: 1
+                    }
+                });
+            } else {
+                stat.insertOne({
+                    type: "BOTPRIV",
+                    messagesProcessed: (msg.content.startsWith(config.prefix)) ? 1 : 0,
+                    messagesSeen: 1
+                });
+            }
+        });
     } catch (e) {
         console.log("Bot stats error!")
     }
@@ -272,13 +330,18 @@ bot.on('message', async (msg) => {
     }
 });
 
-var recursiveLevelUp = (msg) => {
-    var userstats = stat.get("users").find(user => user.id == msg.author.id).value();
-    if (userstats.xp >= (userstats.level * config.xpCoefficient)) {
-        stat.get("users").find(user => user.id == msg.author.id).update("xp", n => n - (userstats.level * config.xpCoefficient)).write();
-        stat.get("users").find(user => user.id == msg.author.id).update("level", n => n + 1).write()
-        recursiveLevelUp(msg);
+var recursiveLevelUp = (xp, level) => {
+    var lxp = xp;
+    var llevel = level;
+
+    if (xp >= (llevel * config.xpCoefficient)) {
+        lxp -= llevel * config.xpCoefficient;
+        llevel += 1;
+        var lup = recursiveLevelUp(lxp, llevel);
+        lxp = lup[0];
+        llevel = lup[1];
     }
+    return [lxp, llevel];
 }
 
 process.on('uncaughtException', (e) => {
@@ -290,9 +353,10 @@ bot.on('messageReactionAdd', (reaction, user) => {
     //commands.unoPlay.execute(reaction, user)
 });
 
-bot.on('guildMemberAdd', member => {
+bot.on('guildMemberAdd', async member => {
     try {
-        var currentServerConfig = serverPrefs.get("servers").find(server => server.id == member.guild.id).value();
+        var currentServerConfig = await serverPrefs.findOne({ id: msg.guild.id });
+        if (!currentServerConfig) return;
         var verificationID = makeVerifictionid();
 
         if (currentServerConfig.config.verificationChannel.set) {
@@ -367,15 +431,6 @@ bot.on('ready', () => {
     // });
 });
 
-var sprlu = () => {
-    var userstats = stat.get("users").find(user => user.id == bot.user.id).value();
-    if (userstats.xp >= (userstats.level * config.xpCoefficient)) {
-        stat.get("users").find(user => user.id == bot.user.id).update("xp", n => n - (userstats.level * config.xpCoefficient)).write();
-        stat.get("users").find(user => user.id == bot.user.id).update("level", n => n + 1).write()
-        sprlu();
-    }
-}
-
 var unAfk = () => {
     var unAfkMsg = `Status: ${bot.status} => ${config.statuses[bot.status]}\nPing: ${bot.ping}`;
 
@@ -388,21 +443,6 @@ var unAfk = () => {
             }, 30000);
         })
     });
-    /*
-    stat.get("users").find(user => user.id == bot.user.id).update("xp", n => n + unAfkMsg.length).write();
-    var userstats = stat.get("users").find(user => user.id == bot.user.id).value();
-    stat.get("users").find(user => user.id == bot.user.id).update("username", n => { return bot.user.username }).write();
-    stat.get("users").find(user => user.id == bot.user.id).update("iconurl", n => { return bot.user.avatarURL }).write();
-    if (userstats.xp >= (userstats.level * config.xpCoefficient)) {
-        stat.get("users").find(user => user.id == bot.user.id).update("xp", n => n - (userstats.level * config.xpCoefficient)).write();
-        stat.get("users").find(user => user.id == bot.user.id).update("level", n => n + 1).write()
-        sprlu();
-    }
-    config.rankProgression.forEach(rank => {
-        if (userstats.level >= rank.startLevel) userstats.rank = rank.levelName;
-    });
-    stat.get("users").find(user => user.id == bot.user.id).set("rank", userstats.rank).write();
-    */
 }
 
 var changeColor = () => {
@@ -459,7 +499,7 @@ rl.on('line', (input) => {
     }
 });
 
-bot.login(config.token).catch(e => {
+bot.login(configPrivate.token).catch(e => {
     console.log(e);
 });
 
@@ -524,7 +564,7 @@ app.get('/', catchAsync(async (req, res) => {
         return;
     }
     const code = req.query.code;
-    const creds = btoa(`${config.clientid}:${config.clientsecret}`);
+    const creds = btoa(`${config.clientid}:${configPrivate.clientsecret}`);
     const authReq = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=http%3A%2F%2Fthisisabot.com%2F`,
         {
             method: 'POST',
@@ -547,13 +587,21 @@ app.get('/', catchAsync(async (req, res) => {
             token: authJson.access_token,
             sessionid: makeSessionid()
         }
-        if (webPanelUsers.get('users').find(user => user.id == finalJson.id).value()) {
-            webPanelUsers.get('users').find(user => user.id == finalJson.id).set('token.token', authJson.access_token).write();
-            webPanelUsers.get('users').find(user => user.id == finalJson.id).set('token.sessionid', makeSessionid()).write();
-            finalJson = webPanelUsers.get('users').find(user => user.id == finalJson.id).value();
-        } else {
-            webPanelUsers.get('users').push(finalJson).write();
-        }
+        webPanelUsers.findOne({ id: finalJson.id }, (err, res) => {
+            if (err) return;
+            if (res) {
+                webPanelUsers.updateOne({ id: finalJson.id }, {
+                    $set: {
+                        token: {
+                            token: authJson.access_token,
+                            sessionid: makeSessionid()
+                        }
+                    }
+                })
+            } else {
+                webPanelUsers.insertOne(finalJson);
+            }
+        });
         res.render(__dirname + '/panel/index', {
             SessionID: finalJson.token.sessionid,
             motd: selectedMOTD
@@ -589,122 +637,145 @@ app.get('/game/', catchAsync(async (req, res) => {
 }));
 
 app.get('/userdata', catchAsync(async (req, res) => {
-    if (req.headers && req.headers.sessionid && webPanelUsers.get('users').find(user => user.token.sessionid == req.headers.sessionid).value()) {
-        var user = webPanelUsers.get('users').find(user => user.token.sessionid == req.headers.sessionid).value()
-        const userRes = await fetch(`http://discordapp.com/api/users/@me`,
-            {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${user.token.token}`,
-                },
-            });
-        var finalJson = await userRes.json();
-        if (finalJson.code != undefined && finalJson.code == 0) {
-            res.sendStatus(404);
-        } else {
-            res.set("Content-Type", "application/json");
-            res.send(finalJson);
-        }
-    } else {
+    if (!req.headers || !req.headers.sessionid) {
         res.sendStatus(404);
+        return
     }
+    webPanelUsers.findOne({ token: { sessionid: req.headers.sessionid } }, async (err, dres) => {
+        if (err) {
+            res.sendStatus(404);
+            return;
+        }
+        if (dres) {
+            const userRes = await fetch(`http://discordapp.com/api/users/@me`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${dres.token.token}`,
+                    },
+                });
+            var finalJson = await userRes.json();
+            if (finalJson.code != undefined && finalJson.code == 0) {
+                res.sendStatus(404);
+            } else {
+                res.set("Content-Type", "application/json");
+                res.send(finalJson);
+            }
+        } else {
+            res.sendStatus(404);
+        }
+    })
 }));
 
 app.get('/userdata/servers', catchAsync(async (req, res) => {
-    if (req.headers && req.headers.sessionid && webPanelUsers.get('users').find(user => user.token.sessionid == req.headers.sessionid).value()) {
-        var user = webPanelUsers.get('users').find(user => user.token.sessionid == req.headers.sessionid).value()
-        const userRes = await fetch(`http://discordapp.com/api/users/@me`,
-            {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${user.token.token}`,
-                },
-            });
-        var userResJson = await userRes.json();
-        const serverRes = await fetch(`http://discordapp.com/api/users/@me/guilds`,
-            {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${user.token.token}`,
-                },
-            });
-        var serverResJson = await serverRes.json();
-        var finalJson = [];
-        serverResJson.forEach(server => {
-            if (bot.guilds.get(server.id) && bot.guilds.get(server.id).member(config.botID)) {
-                if (userResJson.id == config.ownerID) {
-                    finalJson.push(server);
-                } else if (server.owner) {
-                    finalJson.push(server);
-                }
-            }
-        });
-        if (finalJson.code != undefined && finalJson.code == 0) {
-            res.sendStatus(404);
-        } else {
-            res.set("Content-Type", "application/json");
-            res.send(finalJson);
-        }
-    } else {
+    if (!req.headers || !req.headers.sessionid) {
         res.sendStatus(404);
+        return
     }
+
+    webPanelUsers.findOne({ token: { sessionid: req.headers.sessionid } }, async (err, dres) => {
+        if (err) {
+            res.sendStatus(404);
+            return;
+        }
+        if (dres) {
+            const userRes = await fetch(`http://discordapp.com/api/users/@me`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${dres.token.token}`,
+                    },
+                });
+            var userResJson = await userRes.json();
+            const serverRes = await fetch(`http://discordapp.com/api/users/@me/guilds`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${dres.token.token}`,
+                    },
+                });
+            var serverResJson = await serverRes.json();
+            var finalJson = [];
+            serverResJson.forEach(server => {
+                if (bot.guilds.get(server.id) && bot.guilds.get(server.id).member(config.botID)) {
+                    if (userResJson.id == config.ownerID) {
+                        finalJson.push(server);
+                    } else if (server.owner) {
+                        finalJson.push(server);
+                    }
+                }
+            });
+            if (finalJson.code != undefined && finalJson.code == 0) {
+                res.sendStatus(404);
+            } else {
+                res.set("Content-Type", "application/json");
+                res.send(finalJson);
+            }
+        } else {
+            res.sendStatus(404);
+        }
+    });
 }));
 
 app.get('/api/stats/stats/:userid', catchAsync(async (req, res) => {
     console.log('Grabbed stats for user: ' + req.params.userid);
-    var userStats = stat.get("users").find(user => user.id == req.params.userid).value();
-    if (userStats) {
-        res.set("Content-Type", "application/json");
-        res.send(userStats);
-    } else {
-        res.sendStatus(404);
-    }
+    stat.findOne({ id: req.params.userid }, (err, res) => {
+        if (err) return;
+        if (res) {
+            res.set("Content-Type", "application/json");
+            res.send(res);
+        } else {
+            res.sendStatus(404);
+        }
+    });
 }));
 
 app.get('/api/stats/card/:userid', catchAsync(async (req, res) => {
     console.log('Grabbed stats card for user: ' + req.params.userid);
-    var userStats = stat.get("users").find(user => user.id == req.params.userid).value();
-    if (userStats) {
-        var totalXP = userStats.xp;
-        for (var j = 0; j < userStats.level - 1; j++) {
-            totalXP += (userStats.level * config.xpCoefficient);
-        }
-
-        res.set("Content-Type", "application/json");
-        res.send({
-            embed: {
-                color: userStats.color,
-                title: "\"" + userStats.quote + "\"",
-                author: {
-                    name: userStats.username
-                },
-                thumbnail: {
-                    url: userStats.iconurl
-                },
-                fields: [
-                    {
-                        name: "Level",
-                        value: userStats.level
-                    },
-                    {
-                        name: "XP",
-                        value: userStats.xp + "/" + (userStats.level * config.xpCoefficient) + "\nTotal: " + totalXP + "XP"
-                    },
-                    {
-                        name: "Rank(s)",
-                        value: userStats.rank + "\n" + userStats.rankSP
-                    }
-                ],
-                timestamp: new Date(),
-                footer: {
-                    icon_url: bot.user.avatarURL,
-                    text: bot.user.tag
-                }
+    stat.findOne({ id: req.params.userid }, (err, res) => {
+        if (err) return;
+        if (res) {
+            var totalXP = res.xp;
+            for (var j = 0; j < res.level - 1; j++) {
+                totalXP += (res.level * config.xpCoefficient);
             }
-        });
-    } else {
-        res.sendStatus(404);
-    }
+    
+            res.set("Content-Type", "application/json");
+            res.send({
+                embed: {
+                    color: res.color,
+                    title: "\"" + res.quote + "\"",
+                    author: {
+                        name: res.username
+                    },
+                    thumbnail: {
+                        url: res.iconurl
+                    },
+                    fields: [
+                        {
+                            name: "Level",
+                            value: res.level
+                        },
+                        {
+                            name: "XP",
+                            value: res.xp + "/" + (res.level * config.xpCoefficient) + "\nTotal: " + totalXP + "XP"
+                        },
+                        {
+                            name: "Rank(s)",
+                            value: res.rank + "\n" + res.rankSP
+                        }
+                    ],
+                    timestamp: new Date(),
+                    footer: {
+                        icon_url: bot.user.avatarURL,
+                        text: bot.user.tag
+                    }
+                }
+            });
+        } else {
+            res.sendStatus(404);
+        }
+    });
 }));
 
 server.listen(80, () => {

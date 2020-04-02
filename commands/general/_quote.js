@@ -1,24 +1,27 @@
 const Discord = module.require("discord.js");
 const config = module.require('../../config.json');
 
-exports.run = function (bot, msg, args, db) {
+exports.run = function (bot, msg, args, stat) {
     if (args[1]) { //9437439
-        db.get("users").find(user => user.id == msg.author.id).update("quote", n => {return args[1]}).write();
-
-        var user = db.get("users").find(user => user.id == msg.author.id).value();
-
-        var totalXP = user.xp;
-        for (var j = 0; j < user.level - 1; j++) {
-            totalXP += (user.level * config.xpCoefficient);
-        }
-        config.rankProgression.forEach(rank => {
-            if (user.level >= rank.startLevel)
-                user.rank = rank.levelName;
+        stat.updateOne({ id: msg.author.id }, {
+            $set: {
+                quote: args[1]
+            }
         });
-        msg.reply("Ok, here is your new tag!");
-        sendCheckCard(msg, user, totalXP);
+        stat.findOne({ id: msg.author.id }, (err, res) => {
+            if (err) msg.reply("Error retrieving data from MongoDB.");
+            if (res) {
+                var totalXP = res.xp;
+                for (var j = 0; j < res.level - 1; j++) {
+                    totalXP += (res.level * config.xpCoefficient);
+                }
+                sendCheckCard(msg, res, totalXP);
+            } else {
+                msg.reply("Cannot find you in my database!");
+            }
+        });
     } else {
-        msg.reply("Oops, you may have used that wrong, proper usage is: ``" + config.prefix + "quote \"[quote]\"``");
+        msg.reply("Oops, you may have used that wrong, proper usage is: ``" + config.prefix + exports.info.usage + "``");
     }
 }
 

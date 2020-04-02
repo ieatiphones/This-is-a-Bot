@@ -2,7 +2,8 @@ node_modules
 .vscode
 googleClient.json
 stats.json
-config.json
+configPrivate.json
 webPanelUsers.json
 serverPrefs.json
 uno.json
+connections.txt

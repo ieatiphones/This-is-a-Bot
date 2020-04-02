@@ -15,6 +15,8 @@ exports.run = function (bot, msg, args) {
         return;
     }
 
+    if (path.includes("configPrivate")) return;
+
     var data;
     try {
         data = fs.readFileSync(path, 'utf8')

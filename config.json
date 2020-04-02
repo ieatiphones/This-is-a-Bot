@@ -1,0 +1,525 @@
+{
+    "clientid": "460891988191870976",
+    "prefix": "$",
+    "musicListLength": 5,
+    "musicAdminPermission": "SEND_MESSAGES",
+    "giveXPPermission": "SEND_MESSAGES",
+    "ownerID": "313385355049041921",
+    "botID": "460891988191870976",
+    "enableGoogleAssistant": true,
+    "xpCoefficient": 90,
+    "rankProgression": [
+        {
+            "startLevel": 1,
+            "levelName": "Newbie"
+        },
+        {
+            "startLevel": 10,
+            "levelName": "Beginner"
+        },
+        {
+            "startLevel": 20,
+            "levelName": "Advanced"
+        },
+        {
+            "startLevel": 50,
+            "levelName": "Expert"
+        },
+        {
+            "startLevel": 100,
+            "levelName": "God"
+        }
+    ],
+    "copyright": false,
+    "uno": {
+        "cards": [
+            {
+                "emojiid": "573970541988413465",
+                "name": "uno_red_0",
+                "suit": "0",
+                "number": 0,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970542189609003",
+                "name": "uno_red_1",
+                "suit": "1",
+                "number": 1,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970542256848928",
+                "name": "uno_red_2",
+                "suit": "2",
+                "number": 2,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970542235746315",
+                "name": "uno_red_3",
+                "suit": "3",
+                "number": 3,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970542697119744",
+                "name": "uno_red_4",
+                "suit": "4",
+                "number": 4,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970542663827477",
+                "name": "uno_red_5",
+                "suit": "5",
+                "number": 5,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970542655438848",
+                "name": "uno_red_6",
+                "suit": "6",
+                "number": 6,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970542806171658",
+                "name": "uno_red_7",
+                "suit": "7",
+                "number": 7,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970542932262913",
+                "name": "uno_red_8",
+                "suit": "8",
+                "number": 8,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970542558838787",
+                "name": "uno_red_9",
+                "suit": "9",
+                "number": 9,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970543007629313",
+                "name": "uno_red_skip",
+                "suit": "skip",
+                "number": null,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970542680604684",
+                "name": "uno_red_reverse",
+                "suit": "reverse",
+                "number": null,
+                "color": "red"
+            },
+            {
+                "emojiid": "573970543531786268",
+                "name": "uno_red_draw2",
+                "suit": "draw2",
+                "number": null,
+                "color": "red"
+            },
+
+            {
+                "emojiid": "573973930201841664",
+                "name": "uno_yellow_0",
+                "suit": "0",
+                "number": 0,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973930386259999",
+                "name": "uno_yellow_1",
+                "suit": "1",
+                "number": 1,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973930382065674",
+                "name": "uno_yellow_2",
+                "suit": "2",
+                "number": 2,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973930227007509",
+                "name": "uno_yellow_3",
+                "suit": "3",
+                "number": 3,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973930688380938",
+                "name": "uno_yellow_4",
+                "suit": "4",
+                "number": 4,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973930625466368",
+                "name": "uno_yellow_5",
+                "suit": "5",
+                "number": 5,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973930763747339",
+                "name": "uno_yellow_6",
+                "suit": "6",
+                "number": 6,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973931183046676",
+                "name": "uno_yellow_7",
+                "suit": "7",
+                "number": 7,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973930499375104",
+                "name": "uno_yellow_8",
+                "suit": "8",
+                "number": 8,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973930881187870",
+                "name": "uno_yellow_9",
+                "suit": "9",
+                "number": 9,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973931174658081",
+                "name": "uno_yellow_skip",
+                "suit": "skip",
+                "number": null,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973931246092289",
+                "name": "uno_yellow_reverse",
+                "suit": "reverse",
+                "number": null,
+                "color": "yellow"
+            },
+            {
+                "emojiid": "573973931204018189",
+                "name": "uno_yellow_draw2",
+                "suit": "draw2",
+                "number": null,
+                "color": "yellow"
+            },
+
+            {
+                "emojiid": "573976385434157066",
+                "name": "uno_green_0",
+                "suit": "0",
+                "number": 0,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385773633536",
+                "name": "uno_green_1",
+                "suit": "1",
+                "number": 1,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385337688096",
+                "name": "uno_green_2",
+                "suit": "2",
+                "number": 2,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976386029617172",
+                "name": "uno_green_3",
+                "suit": "3",
+                "number": 3,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385668775966",
+                "name": "uno_green_4",
+                "suit": "4",
+                "number": 4,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385719369729",
+                "name": "uno_green_5",
+                "suit": "5",
+                "number": 5,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385836810250",
+                "name": "uno_green_6",
+                "suit": "6",
+                "number": 6,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385551335449",
+                "name": "uno_green_7",
+                "suit": "7",
+                "number": 7,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385568374784",
+                "name": "uno_green_8",
+                "suit": "8",
+                "number": 8,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385463255041",
+                "name": "uno_green_9",
+                "suit": "9",
+                "number": 9,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385668775976",
+                "name": "uno_green_skip",
+                "suit": "skip",
+                "number": null,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385513848832",
+                "name": "uno_green_reverse",
+                "suit": "reverse",
+                "number": null,
+                "color": "green"
+            },
+            {
+                "emojiid": "573976385945600002",
+                "name": "uno_green_draw2",
+                "suit": "draw2",
+                "number": null,
+                "color": "green"
+            },
+
+            {
+                "emojiid": "573978444497551361",
+                "name": "uno_blue_0",
+                "suit": "0",
+                "number": 0,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978444879101952",
+                "name": "uno_blue_1",
+                "suit": "1",
+                "number": 1,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978444883427348",
+                "name": "uno_blue_2",
+                "suit": "2",
+                "number": 2,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978444883427348",
+                "name": "uno_blue_3",
+                "suit": "3",
+                "number": 3,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978445189480469",
+                "name": "uno_blue_4",
+                "suit": "4",
+                "number": 4,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978445068107806",
+                "name": "uno_blue_5",
+                "suit": "5",
+                "number": 5,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978445189742602",
+                "name": "uno_blue_6",
+                "suit": "6",
+                "number": 6,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978445382680576",
+                "name": "uno_blue_7",
+                "suit": "7",
+                "number": 7,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978445269434370",
+                "name": "uno_blue_8",
+                "suit": "8",
+                "number": 8,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978445009256456",
+                "name": "uno_blue_9",
+                "suit": "9",
+                "number": 9,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573979411188285440",
+                "name": "uno_blue_skip",
+                "suit": "skip",
+                "number": null,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978445294600203",
+                "name": "uno_blue_reverse",
+                "suit": "reverse",
+                "number": null,
+                "color": "blue"
+            },
+            {
+                "emojiid": "573978445411778611",
+                "name": "uno_blue_draw2",
+                "suit": "draw2",
+                "number": null,
+                "color": "blue"
+            },
+
+            {
+                "emojiid": "573979481933479966",
+                "name": "uno_wild",
+                "suit": "wild",
+                "number": null,
+                "color": null
+            },
+            {
+                "emojiid": "573979481153208323",
+                "name": "uno_draw4",
+                "suit": "draw4",
+                "number": null,
+                "color": null
+            }
+        ]
+    },
+    "welcomes": [
+        "Welcome @",
+        "@, welcome!",
+        "Hello @!",
+        "W̶̔ ̴̃Ė̵ ̵̓L̶͠ ̵̊C̷̛ ̶̈́O̶̓ ̵͂M̵͂ ̷̐E̷̓  @",
+        "【<feff>Ｗ　Ｅ　Ｌ　Ｃ　Ｏ　Ｍ　Ｅ】 @"
+    ],
+    "statuses": [
+        "Dispatch",
+        "Heartbeat",
+        "Identify",
+        "Status Update",
+        "Voice State Update",
+        "Resume",
+        "Reconnect",
+        "Request Guild Members",
+        "Invalid Session",
+        "Hello",
+        "Heartbeat ACK"
+    ],
+    "marks": [
+        {
+            "type": "watching",
+            "text": "my depression"
+        },
+        {
+            "type": "watching",
+            "text": "my code"
+        },
+        {
+            "type": "watching",
+            "text": "you"
+        },
+        {
+            "type": "playing",
+            "text": "a game"
+        },
+        {
+            "type": "listening",
+            "text": "Africa - Toto"
+        },
+        {
+            "type": "watching",
+            "text": "you sleep"
+        },
+        {
+            "type": "watching",
+            "text": "drub through his webcam"
+        },
+        {
+            "type": "listening",
+            "text": "the screams from hell"
+        },
+        {
+            "type": "listening",
+            "text": "Karen complain"
+        },
+        {
+            "type": "listening",
+            "text": "my mom crying"
+        },
+        {
+            "type": "watching",
+            "text": "you die"
+        },
+        {
+            "type": "watching",
+            "text": "Drub write shitty code"
+        },
+        {
+            "type": "playing",
+            "text": "www.thisisabot.com"
+        },
+        {
+            "type": "playing",
+            "text": "Pokémon Moon"
+        },
+        {
+            "type": "playing",
+            "text": "Pokémon X"
+        }
+    ],
+    "motds": [
+        "**NOT** written in Scratch.",
+        "FizzyApple12 was here.",
+        "Woah cool!",
+        "Days without sleep: {3,1,10}",
+        "~~Garbage~~ Amazing bot!",
+        "~~__***I N V I T E  M E***__~~",
+        "In {1} servers.",
+        "What do you expect?",
+        "{2} is cool!",
+        "Now with more markdown.",
+        "\"Beep. Boop.\"<br>\t-This is a bot",
+        "![Hmm](https://i.kym-cdn.com/photos/images/original/001/151/543/119.jpg)",
+        "![Threat level tank](https://cdn.discordapp.com/attachments/337779388349284352/583439074094874624/Threat_level_tank.gif)",
+        "Pokémon games are the best."
+    ],
+    "mongodb": {
+        "dbUrl": "mongodb://localhost:27017",
+        "dbName": "this_is_a_bot",
+        "statsDB": "stats",
+        "serverPrefsDB": "serverPrefs",
+        "webPanelUsersDB": "webPanelUsers"
+    }
+}

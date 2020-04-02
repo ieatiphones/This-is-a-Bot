@@ -1,10 +1,7 @@
 const Discord = module.require("discord.js");
 const config = module.require('../../config.json');
 
-const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
-
-exports.run = function (bot, msg, args) {
+exports.run = function (bot, msg, args, stat) {
     var content = msg.content.substring(config.prefix.length);
 
     var personToCheck;
@@ -27,28 +24,18 @@ exports.run = function (bot, msg, args) {
     }
     else personToCheck = msg.author.id;
 
-    var db = low(new FileSync('stats.json'))
-    db.defaults({ messagesSeen: 0, messagesProcessed: 0, users: [] }).write();
-    
-    console.log(personToCheck);
-
-    var user = db.get("users").find(user => user.id == personToCheck).value();
-
-    if (user == undefined || user == null) {
-        msg.reply("Cannot find that user in my database. Check your id or @ tag");
-        return;
-    }
-
-    var totalXP = user.xp;
-    for (var j = 0; j < user.level - 1; j++) {
-        totalXP += (user.level * config.xpCoefficient);
-    }
-    config.rankProgression.forEach(rank => {
-        if (user.level >= rank.startLevel)
-            user.rank = rank.levelName;
+    stat.findOne({ id: personToCheck }, (err, res) => {
+        if (err) msg.reply("Error retrieving data from MongoDB.");
+        if (res) {
+            var totalXP = res.xp;
+            for (var j = 0; j < res.level - 1; j++) {
+                totalXP += (res.level * config.xpCoefficient);
+            }
+            sendCheckCard(msg, res, totalXP);
+        } else {
+            msg.reply("Cannot find that user in my database. Check your id or tag");
+        }
     });
-    db.get("users").find(user => user.id == personToCheck).set("rank", user.rank).write();
-    sendCheckCard(msg, user, totalXP);
 }
 
 var sendCheckCard = (msg, userStats, totalXP) => {

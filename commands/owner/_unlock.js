@@ -4,12 +4,13 @@ const config = module.require('../../config.json');
 exports.run = function (bot, msg, args, stat, music, serverPrefs) {
     msg.channel.send("```diff\n- !!!SERVER LOCKDOWN!!! -\n-     UNLOCKING...     -\n```").then((newMSG) => {
         try {
-            var serverConfig = serverPrefs.get("servers").find(server => server.id == args[1]).value();
-
-            if (serverConfig.config.locked) serverPrefs.get("servers").find(server => server.id == args[1]).get("config").set("locked", false).write();
-            else {
-                throw new Error("Already Unlocked!");
-            }
+            serverPrefs.updateOne({ id: msg.guild.id }, {
+                $set: {
+                    config: {
+                        locked: false
+                    }
+                }
+            });
 
             newMSG.edit("```diff\n- !!!SERVER LOCKDOWN!!! -\n+       UNLOCKED!       +\n```");
         } catch (e) {
