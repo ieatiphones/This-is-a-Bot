@@ -1,6 +1,7 @@
 {
     "clientid": "460891988191870976",
     "prefix": "$",
+    "iieprefix": "$$$",
     "musicListLength": 5,
     "musicAdminPermission": "SEND_MESSAGES",
     "giveXPPermission": "SEND_MESSAGES",

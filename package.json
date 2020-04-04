@@ -17,6 +17,7 @@
     "ffmpeg-binaries": "^4.0.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
+    "gm": "^1.23.1",
     "mathjs": "^5.8.0",
     "mongodb": "^3.5.5",
     "node-fetch": "^2.6.0",
@@ -31,7 +32,8 @@
       "serverPrefs.json",
       "stats.json",
       "uno.json",
-      "webPanelUsers.json"
+      "webPanelUsers.json",
+      "./innerImageEditor/imagecache/"
     ]
   }
 }

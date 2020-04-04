@@ -5,12 +5,11 @@ const configPrivate = new require('./configPrivate.json');
 const fs = require('fs');
 const readline = require('readline');
 
-// const IIEconfig = new require('./config.json');
-// const IIE = require('./innerImageEditor/index.js');
-// IIE.init();
-
 global.appRoot = __dirname
 global.appMain = __filename
+
+const IIE = require('./innerImageEditor/index.js');
+IIE.init();
 
 var music;
 try {
@@ -252,10 +251,10 @@ bot.on('message', async (msg) => {
         console.log("Bot stats error!")
     }
 
-    // if (msg.content.startsWith("$$$")) {
-    //     IIE.invoke(bot, msg);
-    //     return;
-    // }
+    if (msg.content.startsWith(config.iieprefix)) {
+        IIE.invoke(bot, msg, args);
+        return;
+    }
 
     if (!msg.content.startsWith(config.prefix)) return;
 

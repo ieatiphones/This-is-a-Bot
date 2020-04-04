@@ -11,7 +11,7 @@ exports.run = function (bot, msg, args) {
             /*msg.reply("Here is a cat!", {
                 file: info[0].url,
             });*/
-	    msg.reply(`Here is a cat!\n${info[0].url}`);
+	        msg.reply(`Here is a cat!\n${info[0].url}`);
         }
     });
 }
