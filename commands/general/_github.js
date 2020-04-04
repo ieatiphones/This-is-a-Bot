@@ -6,8 +6,8 @@ exports.run = function (bot, msg, args) {
 }
 
 exports.info = {
-    name: 'name',
-    usage: 'name (enclose){optional}[require]|or|',
-    description: 'description',
-    category: "category"
+    name: 'github',
+    usage: 'github',
+    description: 'Gets the URL for the GitHub repository for the bot.',
+    category: "general"
 };
