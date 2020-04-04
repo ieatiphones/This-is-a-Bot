@@ -53,6 +53,7 @@ exports.run = function (bot, msg, args) {
     if (!isNaN(args[2]) && !isNaN(args[3])) {
         msg.channel.send(`Reading: \`\`${path}\`\` from line ${lineS} to line ${lineE}`);
         for (var i = lineS - 1; i < lineE; i++) {
+            if (i >= lines.length) continue;
             code += lines[i] + "\n";
         }
     } else {
