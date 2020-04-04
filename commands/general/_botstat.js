@@ -2,7 +2,7 @@ const Discord = module.require("discord.js");
 const config = module.require('../../config.json');
 
 exports.run = function (bot, msg, args, stat) {
-
+    var start = new Date();
     stat.findOne({ type: "BOTPRIV" }, (err, res) => {
         if (err) return;
 
@@ -19,12 +19,12 @@ exports.run = function (bot, msg, args, stat) {
         var embFeilds = [
             {
                 name: "Discord Connection\nStatus",
-                value: bot.status.toString() + " => " + config.statuses[bot.status],
+                value: `${bot.status.toString()} => ${config.statuses[bot.status]}`,
                 inline: true
             },
             {
                 name: "Uptime",
-                value: "Online since\n" + new Date(onlineSince).toLocaleString(),
+                value: `Online since\n${new Date(onlineSince).toLocaleString()}`,
                 inline: true
             },
             {
@@ -41,15 +41,13 @@ exports.run = function (bot, msg, args, stat) {
                 name: "Current Heartbeat\nPing",
                 value: bot.ping.toString(),
                 inline: true
+            },
+            {
+                name: "MongoDB Latency",
+                value: `${new Date() - start}ms`,
+                inline: true
             }
         ]
-        bot.pings.forEach((ping, index) => {
-            embFeilds.push({
-                name: "Past Heartbeat\nPing #" + (index + 1),
-                value: ping.toString(),
-                inline: true
-            })
-        })
         msg.channel.send({
             embed: {
                 color: 6697881,

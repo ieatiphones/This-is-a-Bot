@@ -89,7 +89,7 @@ exports.invoke = function (bot, msg, args) {
         var fileName = makeImageid();
 
         request.head(userImages[foundIndex].image, (err, res, body) => {
-            request(userImages[foundIndex].image).pipe(fs.createWriteStream("./imagecache/" + fileName + userImages[foundIndex].image.split('.')[userImages[foundIndex].image.split('.').length - 1])).on('close', () => {
+            request(userImages[foundIndex].image).pipe(fs.createWriteStream(`./imagecache/${fileName + userImages[foundIndex].image.split('.')[userImages[foundIndex].image.split('.').length - 1]}`)).on('close', () => {
 
             });
         });

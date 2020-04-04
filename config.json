@@ -6,7 +6,7 @@
     "giveXPPermission": "SEND_MESSAGES",
     "ownerID": "313385355049041921",
     "botID": "460891988191870976",
-    "enableGoogleAssistant": true,
+    "githubURL": "https://github.com/FizzyApple12/This-is-a-Bot",
     "xpCoefficient": 90,
     "rankProgression": [
         {

@@ -15,7 +15,7 @@ exports.run = function (bot, msg, args) {
                 validCategories.push(command.info.category)
                 catfeilds.push({
                     name: "" + command.info.category,
-                    value: "``" + config.prefix + "help [page number] \"" + command.info.category + "\"``"
+                    value: "``" + config.prefix + "help \"" + command.info.category + "\" [page number]``"
                 })
             }
         });
@@ -24,7 +24,7 @@ exports.run = function (bot, msg, args) {
                 validCategories.push(command.info.category)
                 catfeilds.push({
                     name: "" + command.info.category,
-                    value: "``" + config.prefix + "help [page number] \"" + command.info.category + "\"``"
+                    value: "``" + config.prefix + "help \"" + command.info.category + "\" [page number]``"
                 })
             }
         });
@@ -102,13 +102,8 @@ exports.run = function (bot, msg, args) {
     if (page == 68) {
         cmdfeilds.push({
             name: "Nice.",
-	    value: "Nice."
-	});
-    } else if (page == 429) {
-        cmdfeilds.push({
-	    name: "Big smoke.",
-	    value: "YOU PICKED THE WRONG HOUSE FOOL!"
-	});
+	        value: "Nice."
+	    });
     }
 
     msg.channel.send({

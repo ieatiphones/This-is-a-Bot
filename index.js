@@ -27,7 +27,7 @@ var server = http.Server(app);
 const btoa = require('btoa');
 var fetch = require('node-fetch');
 
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient;//Rexy waz here
 var mongoDB;
 var stat;
 var serverPrefs;
@@ -123,7 +123,7 @@ bot.on('message', async (msg) => {
         var channelid = msg.channel.id;
 
         if (msg.content != "" && msg.author.id != "460891988191870976") {
-            console.log("[MESSAGE CONTENT] >> \"" + msg + "\"");
+            console.log(`[MESSAGE CONTENT] >> \"${msg}\"`);
             console.log(`^^ { channelid: ${channelid}, authorid: ${msg.author.id}, guildName: ${(msg.guild == null) ? "Direct Message" : msg.guild.name} }`);
         }
     } catch (e) {
@@ -139,7 +139,7 @@ bot.on('message', async (msg) => {
                     if (userVer.aid == msg.author.id) {
                         if (msg.content.toLowerCase() == userVer.vid) {
                             verifications.splice(index, 1);
-                            msg.reply("Verified! Have fun at **" + currentServerConfig.name + "**");
+                            msg.reply(`Verified! Have fun at **${currentServerConfig.name}**`);
                             msg.member.removeRole(msg.guild.roles.get(currentServerConfig.config.verificationChannel.roleid));
                             if (currentServerConfig.config.verificationChannel.finalroleid != null) msg.member.addRole(msg.guild.roles.get(currentServerConfig.config.verificationChannel.finalroleid));
                         } else {
@@ -307,7 +307,7 @@ bot.on('message', async (msg) => {
                 msg.react(bot.emojis.get('587386664104755210'));
 	    } catch (e) {
 		msg.react(bot.emojis.get('587386664012480522'));
-                msg.reply("That command threw the error: ```" + e + "```");
+                msg.reply(`That command threw the error: \`\`\`${e}\`\`\``);
                 console.log("COMMAND ERROR:");
                 console.log(e);
             }
@@ -316,7 +316,7 @@ bot.on('message', async (msg) => {
         } else {
 	    loadReact.remove();
 	    msg.react(bot.emojis.get('587386664012480522'));
-            msg.channel.send("I'm sorry <@" + msg.author.id + ">, I'm afraid I cant let you do that.");
+            msg.channel.send(`I'm sorry <@${msg.author.id}>, I'm afraid I cant let you do that.`);
             return;
         }
     }
@@ -326,7 +326,7 @@ bot.on('message', async (msg) => {
 	    msg.react(bot.emojis.get('587386664104755210'));
 	} catch (e) {
 	    msg.react(bot.emojis.get('587386664012480522'));
-            msg.reply("That command threw the error: ```" + e + "```");
+            msg.reply(`That command threw the error: \`\`\`${e}\`\`\``);
             console.log("COMMAND ERROR:");
             console.log(e);
         }
@@ -375,7 +375,7 @@ bot.on('guildMemberAdd', async member => {
                     fields: [
                         {
                             "name": verificationID,
-                            "value": "^^ <@" + member.id + "> Send the code above ^^"
+                            "value": `^^ <@${member.id}> Send the code above ^^`
                         },
                         {
                             "name": "What happens if I don't?",
@@ -405,7 +405,7 @@ bot.on('guildMemberAdd', async member => {
 
         if (currentServerConfig.config.welcomeChannel.set) {
             var welcomeMessge = config.welcomes[Math.floor(Math.random() * config.welcomes.length)];
-            welcomeMessge = welcomeMessge.replace("@", "<@" + member.id + ">");
+            welcomeMessge = welcomeMessge.replace("@", `<@${member.id}>`);
             member.guild.channels.get(currentServerConfig.config.welcomeChannel.id).send(welcomeMessge);
         }
     } catch (e) {
@@ -749,7 +749,7 @@ app.get('/api/stats/card/:userid', catchAsync(async (req, res) => {
             res.send({
                 embed: {
                     color: res.color,
-                    title: "\"" + res.quote + "\"",
+                    title: `\"${res.quote}\"`,
                     author: {
                         name: res.username
                     },
@@ -763,11 +763,11 @@ app.get('/api/stats/card/:userid', catchAsync(async (req, res) => {
                         },
                         {
                             name: "XP",
-                            value: res.xp + "/" + (res.level * config.xpCoefficient) + "\nTotal: " + totalXP + "XP"
+                            value: `${res.xp}/${(res.level * config.xpCoefficient)}\nTotal: ${totalXP}XP`
                         },
                         {
                             name: "Rank(s)",
-                            value: res.rank + "\n" + res.rankSP
+                            value: `${res.rank}\n${res.rankSP}`
                         }
                     ],
                     timestamp: new Date(),

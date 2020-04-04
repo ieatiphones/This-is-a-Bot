@@ -9,10 +9,11 @@ exports.run = function (bot, msg, args) {
     var lineE = null;
 
     if (args[1]) {
-        path = appRoot + "/" + args[1];
+        path = `${appRoot}/${args[1]}`;
         path = path.replace(/\//g, "/");
     } else {
-        msg.reply("You must specify a path to read.")
+        path = `${appRoot}`;
+        path = path.replace(/\//g, "/");
         return;
     }
 
@@ -20,7 +21,7 @@ exports.run = function (bot, msg, args) {
     try {
         data = fs.readFileSync(path, 'utf8')
     } catch (e) {
-        msg.reply("Could not find path: ``" + path + "``")
+        msg.reply(`Could not find path: \`\`${path}\`\``)
         return;
     }
 

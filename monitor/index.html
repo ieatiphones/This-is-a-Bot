@@ -76,12 +76,12 @@
 			});
 
 			ipcRenderer.on('status', (event, input) => {
-				document.getElementsByClassName("info-text")[0].innerHTML = "Status: " + input;
+				document.getElementsByClassName("info-text")[0].innerHTML = `Status: ${input}`;
 			});
 
 			ipcRenderer.on('uptime', (event, input) => {
 				if (input == "Unknown") {
-					document.getElementsByClassName("info-text")[1].innerHTML = "Uptime: " + input;
+					document.getElementsByClassName("info-text")[1].innerHTML = `"Uptime: ${input}`;
 					return;
 				}
 
@@ -89,9 +89,9 @@
         		var minutes = parseInt((input / (1000 * 60)) % 60)
         		var hours = parseInt((input / (1000 * 60 * 60)) % 24);
 
-    			hours = (hours < 10) ? "0" + hours : hours;
-    			minutes = (minutes < 10) ? "0" + minutes : minutes;
-				seconds = (seconds < 10) ? "0" + seconds : seconds;
+    			hours = (hours < 10) ? `0${hours}` : hours;
+    			minutes = (minutes < 10) ? `0${minutes}` : minutes;
+				seconds = (seconds < 10) ? `0${seconds}` : seconds;
 				
 				document.getElementsByClassName("info-text")[1].innerHTML = `Uptime: ${hours}:${minutes}:${seconds}`;
 			});

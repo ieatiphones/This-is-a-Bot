@@ -8,20 +8,23 @@ exports.run = function (bot, msg, args) {
     var lineE = null;
 
     if (args[1]) {
-        path = appRoot + "/" + args[1];
+        path = `${appRoot}/${args[1]}`;
         path = path.replace(/\//g, "/");
     } else {
         msg.reply("You must specify a file to read.")
         return;
     }
 
-    if (path.includes("configPrivate")) return;
+    if (path.includes("configPrivate")) {
+        msg.reply("configPrivate.json contains sensitive data and cannot be read.")
+        return;
+    }
 
     var data;
     try {
         data = fs.readFileSync(path, 'utf8')
     } catch (e) {
-        msg.reply("Could not find file: ``" + path + "``")
+        msg.reply(`Could not find file: \`\`${path}\`\``)
         return;
     }
     var lines = data.split("\n");
