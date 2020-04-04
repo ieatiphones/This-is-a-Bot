@@ -12,7 +12,6 @@ exports.run = function (bot, msg, args) {
     } else {
         path = `${appRoot}`;
         path = path.replace(/\//g, "/");
-        return;
     }
 
     var data;
@@ -25,7 +24,7 @@ exports.run = function (bot, msg, args) {
 
     var list = `${path}\n`;
 
-    data.foreach((dirent, i) => {
+    data.forEach((dirent, i) => {
         list += `${(i == list.length - 1) ? "┗" : "┣"} /${dirent.name}${(dirent.isFile()) ? "" : "/"}\n`
     });
 
