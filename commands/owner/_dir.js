@@ -25,9 +25,7 @@ exports.run = function (bot, msg, args) {
     var list = `${path}\n`;
 
     data.forEach((dirent, i) => {
-        //list += `${(i == list.length - 1) ? "┗" : "┣"} /${dirent.name}${(dirent.isFile()) ? "" : "/"}\n`
-        msg.channel.send(typeof dirent)
-        msg.channel.send(dirent)
+        list += `${(i == list.length - 1) ? "┗" : "┣"} /${dirent.name}${(dirent.isFile()) ? "" : "/"}\n`
     });
 
     msg.channel.send(`Files and directories inside of: \`\`${path}\`\`\n\`\`\`${list}\`\`\``);
