@@ -14,6 +14,11 @@ exports.run = function (bot, msg, args) {
         path = path.replace(/\//g, "/");
     }
 
+    if (path.includes("/.") || path.includes("/..")) {
+        msg.reply("Cannot use relative symbols for security reasons.");
+        return;
+    }
+
     var data;
     try {
         data = fs.readdirSync(path, { encoding: 'utf8', withFileTypes: true });
