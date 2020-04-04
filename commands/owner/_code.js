@@ -20,6 +20,11 @@ exports.run = function (bot, msg, args) {
         return;
     }
 
+    if (path.includes("/.") || path.includes("/..")) {
+        msg.reply("Cannot use relative symbols for security reasons.");
+        return;
+    }
+
     var data;
     try {
         data = fs.readFileSync(path, 'utf8')

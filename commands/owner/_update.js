@@ -2,10 +2,10 @@ const Discord = module.require("discord.js");
 const config = module.require('../../config.json');
 const childProcess = require("child_process");
 
-exports.run = function (bot, msg, args, stat, music, serverPrefs, loadReact) {
+exports.run = async function (bot, msg, args, stat, music, serverPrefs, loadReact) {
     childProcess.execSync("git pull", { cwd: appRoot });
-    loadReact.remove();
-    msg.react(bot.emojis.get('587386664104755210'));
+    await loadReact.remove();
+    await msg.react(bot.emojis.get('587386664104755210'));
     childProcess.execSync("pm2 restart 0", { cwd: appRoot });
 }
 
