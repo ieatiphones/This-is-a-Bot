@@ -40,12 +40,12 @@ exports.run = function (bot, msg, args) {
         lineE = parseInt(args[3]);
 
         if (lineS - 1 > lines.length || lineE > lines.length) {
-            msg.reply(new Error('File end reached without finding line'));
+            msg.reply('Start line and end line must be less than the file length');
             return;
         }
     
         if (lineS - 1 > lineE) {
-            msg.reply(new Error('Start line must be less than the end line'));
+            msg.reply('Start line must be less than the end line');
             return;
         }
     }
