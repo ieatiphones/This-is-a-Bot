@@ -5,8 +5,6 @@ var path = require('path');
 
 exports.run = function (bot, msg, args) {
     var path = "";
-    var lineS = null;
-    var lineE = null;
 
     if (args[1]) {
         path = `${appRoot}/${args[1]}`;
@@ -25,12 +23,7 @@ exports.run = function (bot, msg, args) {
         return;
     }
 
-
     msg.channel.send(`Files and directories inside of: \`\`${path}\`\``);
-    lines.forEach(line => {
-        entries += line + "\n";
-    });
-    msg.channel.send(entries);
 }
 
 exports.info = {
