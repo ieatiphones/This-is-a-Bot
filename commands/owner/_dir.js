@@ -19,7 +19,7 @@ exports.run = function (bot, msg, args) {
 
     var data;
     try {
-        data = fs.readFileSync(path, 'utf8')
+        data = fs.readdirSync(path, { encoding: 'utf8', withFileTypes: true });
     } catch (e) {
         msg.reply(`Could not find path: \`\`${path}\`\``)
         return;
