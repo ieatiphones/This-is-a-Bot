@@ -23,7 +23,13 @@ exports.run = function (bot, msg, args) {
         return;
     }
 
-    msg.channel.send(`Files and directories inside of: \`\`${path}\`\``);
+    var list = `${path}\n`;
+
+    data.foreach((dirent, i) => {
+        list += `${(i == list.length - 1) ? "┗" : "┣"} /${dirent.name}${(dirent.isFile()) ? "" : "/"}\n`
+    });
+
+    msg.channel.send(`Files and directories inside of: \`\`${path}\`\`\n\`\`\`${list}\`\`\``);
 }
 
 exports.info = {
