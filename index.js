@@ -113,7 +113,7 @@ bot.on('message', async (msg) => {
 
     try {
         if (msg.mentions.everyone || msg.mentions.members.has(bot.user.id)) {
-	    msg.react(bot.emojis.get('636983330973417492'));
+	        msg.react(bot.emojis.get('636983330973417492'));
         }
     } catch (e) {
         console.log("Could not find and/or add pingsock!");
@@ -128,7 +128,7 @@ bot.on('message', async (msg) => {
         }
     } catch (e) {
         console.log("[MESSAGE CONTENT] Error Retrieving Message Data!");
-	console.log(e);
+	    console.log(e);
     }
 
     try {
@@ -260,15 +260,6 @@ bot.on('message', async (msg) => {
     if (!msg.content.startsWith(config.prefix)) return;
 
     var loadReact;
-    var readyToProcess = false;
-    /*
-    await msg.react(bot.emojis.get('660972734582358035')).then(r => {
-        loadReact = r;
-	readyToProcess = true;
-    });
-    */
-
-    //while (!readyToProcess) {}
 
     var content = msg.content.substring(config.prefix.length);
 
@@ -296,41 +287,40 @@ bot.on('message', async (msg) => {
     if (generalCommand || ownerCommand) {
         await msg.react(bot.emojis.get('660972734582358035')).then(r => {
             loadReact = r;
-            readyToProcess = true;
         });
     }
 
     if (ownerCommand) {
         if (msg.author.id == config.ownerID) {
             try {
-                ownerCommand.run(bot, msg, args, stat, music, serverPrefs);
+                ownerCommand.run(bot, msg, args, stat, music, serverPrefs, loadReact);
                 msg.react(bot.emojis.get('587386664104755210'));
-	    } catch (e) {
-		msg.react(bot.emojis.get('587386664012480522'));
+	        } catch (e) {
+		        msg.react(bot.emojis.get('587386664012480522'));
                 msg.reply(`That command threw the error: \`\`\`${e}\`\`\``);
                 console.log("COMMAND ERROR:");
                 console.log(e);
             }
-	    loadReact.remove();
+	        loadReact.remove();
             return;
         } else {
-	    loadReact.remove();
-	    msg.react(bot.emojis.get('587386664012480522'));
+	        loadReact.remove();
+	        msg.react(bot.emojis.get('587386664012480522'));
             msg.channel.send(`I'm sorry <@${msg.author.id}>, I'm afraid I cant let you do that.`);
             return;
         }
     }
     if (generalCommand) {
         try {
-            generalCommand.run(bot, msg, args, stat, music, serverPrefs);
-	    msg.react(bot.emojis.get('587386664104755210'));
-	} catch (e) {
-	    msg.react(bot.emojis.get('587386664012480522'));
+            generalCommand.run(bot, msg, args, stat, music, serverPrefs, loadReact);
+	        msg.react(bot.emojis.get('587386664104755210'));
+	    } catch (e) {
+	        msg.react(bot.emojis.get('587386664012480522'));
             msg.reply(`That command threw the error: \`\`\`${e}\`\`\``);
             console.log("COMMAND ERROR:");
             console.log(e);
         }
-	loadReact.remove();
+	    loadReact.remove();
         return;
     }
 });

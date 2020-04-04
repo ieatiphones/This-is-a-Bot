@@ -22,10 +22,10 @@ exports.run = function (bot, msg, args) {
         return;
     }
 
-    var list = `${path}\n`;
+    var list = ``;
 
     data.forEach((dirent, i) => {
-        list += `\t/${dirent.name}${(dirent.isFile()) ? "" : "/"}\n`
+        list += `${dirent.name}${(dirent.isFile()) ? "" : "/"}\n`
     });
 
     msg.channel.send(`Files and directories inside of: \`\`${path}\`\`\n\`\`\`${list}\`\`\``);
