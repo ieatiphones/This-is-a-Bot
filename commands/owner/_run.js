@@ -1,7 +1,7 @@
 const Discord = module.require("discord.js");
 const config = module.require('../../config.json');
 
-exports.run = function (bot, msg, args) {
+exports.run = function (bot, msg, args, stat, music, serverPrefs, loadReact, IIE) {
     try {
         var result = eval(args[1]);
         if (result) msg.channel.send(`CODE EXECUTION:\nFNISHED\`\`\`${result}\`\`\``);
