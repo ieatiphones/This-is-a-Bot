@@ -6,8 +6,13 @@
   "scripts": {
     "start": "electron ."
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FizzyApple12/This-is-a-Bot.git"
+  },
   "author": "FizzyApple12",
   "license": "ISC",
+  "homepage": "http://www.thisisabot.com",
   "dependencies": {
     "btoa": "^1.2.1",
     "discord.js": "^11.4.2",
