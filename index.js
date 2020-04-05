@@ -44,6 +44,7 @@ MongoClient.connect(config.mongodb.dbUrl, { useUnifiedTopology: true }, (err, cl
 
 bot.generalCommands = new Discord.Collection();
 bot.ownerCommands = new Discord.Collection();
+bot.iieCommands = new Discord.Collection();
 
 var spaces = 0;
 var verifications = [];
@@ -71,6 +72,35 @@ fs.readdir("./commands/general", (err, fls) => {
         try {
             var command = require(`./commands/general/${name}`);
             bot.generalCommands.set(name, command);
+            console.log('\x1b[32m%s\x1b[0m', finalSpaces + 'OK')
+        } catch (e) {
+            console.log('\x1b[31m%s\x1b[0m', finalSpaces + 'FAIL')
+        }
+    })
+})
+fs.readdir("./commands/iie", (err, fls) => {
+    if (err) console.log(err);
+
+    var commands = fls.filter(file => file.split(".").pop() == "js");
+
+    if (commands.length < 1) {
+        console.error("No general commands found.");
+        return;
+    }
+
+    commands.forEach((name, i) => {
+        if (name.length + 5 > spaces) spaces = name.length + 5;
+    })
+
+    commands.forEach((name, i) => {
+        var finalSpaces = "";
+        for (var i = 0; i < spaces - name.length; i++) {
+            finalSpaces += " "
+        }
+        process.stdout.write(`Loading IIE Command: ${name} `);
+        try {
+            var command = require(`./commands/iie/${name}`);
+            bot.iieCommands.set(name, command);
             console.log('\x1b[32m%s\x1b[0m', finalSpaces + 'OK')
         } catch (e) {
             console.log('\x1b[31m%s\x1b[0m', finalSpaces + 'FAIL')
@@ -251,12 +281,7 @@ bot.on('message', async (msg) => {
         console.log("Bot stats error!")
     }
 
-    if (msg.content.startsWith(config.iieprefix)) {
-        IIE.invoke(bot, msg, args);
-        return;
-    }
-
-    if (!msg.content.startsWith(config.prefix)) return;
+    if (!msg.content.startsWith(config.prefix) && !msg.content.startsWith(config.iieprefix)) return;
 
     var loadReact;
 
@@ -282,8 +307,9 @@ bot.on('message', async (msg) => {
 
     var ownerCommand = bot.ownerCommands.find(command => command.info.name === args[0]);
     var generalCommand = bot.generalCommands.find(command => command.info.name === args[0]);
+    var iieCommand = bot.iieCommands.find(command => command.info.name === args[0]);
 
-    if (generalCommand || ownerCommand) {
+    if (generalCommand || ownerCommand || iieCommand) {
         await msg.react(bot.emojis.get('660972734582358035')).then(r => {
             loadReact = r;
         });
@@ -292,7 +318,7 @@ bot.on('message', async (msg) => {
     if (ownerCommand) {
         if (msg.author.id == config.ownerID) {
             try {
-                ownerCommand.run(bot, msg, args, stat, music, serverPrefs, loadReact);
+                ownerCommand.run(bot, msg, args, stat, music, serverPrefs, loadReact, IIE);
                 msg.react(bot.emojis.get('587386664104755210'));
 	        } catch (e) {
 		        msg.react(bot.emojis.get('587386664012480522'));
@@ -311,7 +337,20 @@ bot.on('message', async (msg) => {
     }
     if (generalCommand) {
         try {
-            generalCommand.run(bot, msg, args, stat, music, serverPrefs, loadReact);
+            generalCommand.run(bot, msg, args, stat, music, serverPrefs, loadReact, IIE);
+	        msg.react(bot.emojis.get('587386664104755210'));
+	    } catch (e) {
+	        msg.react(bot.emojis.get('587386664012480522'));
+            msg.reply(`That command threw the error: \`\`\`${e}\`\`\``);
+            console.log("COMMAND ERROR:");
+            console.log(e);
+        }
+	    loadReact.remove();
+        return;
+    }
+    if (iieCommand) {
+        try {
+            iieCommand.run(bot, msg, args, IIE);
 	        msg.react(bot.emojis.get('587386664104755210'));
 	    } catch (e) {
 	        msg.react(bot.emojis.get('587386664012480522'));

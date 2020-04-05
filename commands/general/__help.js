@@ -28,6 +28,15 @@ exports.run = function (bot, msg, args) {
                 })
             }
         });
+        bot.iieCommands.forEach(command => {
+            if (!validCategories.includes(command.info.category) && command.info.category != null) {
+                validCategories.push(command.info.category)
+                catfeilds.push({
+                    name: "" + command.info.category,
+                    value: "``" + config.prefix + "help \"" + command.info.category + "\" [page number]``"
+                })
+            }
+        });
         msg.channel.send({
             embed: {
                 color: 6697881,
@@ -71,12 +80,21 @@ exports.run = function (bot, msg, args) {
             if (command.info.category == args[2])
                 helpable.push(command)
         });
+        bot.iieCommands.forEach(command => {
+            if (command.info.category == null) return;
+            if (command.info.category == args[2])
+                helpable.push(command)
+        });
     } else {
         bot.generalCommands.forEach(command => {
             if (command.info.category == null) return;
             helpable.push(command)
         });
         bot.ownerCommands.forEach(command => {
+            if (command.info.category == null) return;
+            helpable.push(command)
+        });
+        bot.iieCommands.forEach(command => {
             if (command.info.category == null) return;
             helpable.push(command)
         });
