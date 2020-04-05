@@ -5,7 +5,6 @@ var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
 
 exports.run = function (bot, msg, args) {
-    return;
 	if (args[1] == undefined || args[1] == "help" || args[1] == "") {
         msg.channel.send({
             embed: {
