@@ -350,15 +350,17 @@ bot.on('message', async (msg) => {
     }
     if (iieCommand) {
         try {
-            iieCommand.run(bot, msg, args, IIE);
-	        msg.react(bot.emojis.get('587386664104755210'));
+            iieCommand.run(() => {
+	            loadReact.remove();
+                msg.react(bot.emojis.get('587386664104755210'));
+            }, bot, msg, args, IIE);
 	    } catch (e) {
+            loadReact.remove();
 	        msg.react(bot.emojis.get('587386664012480522'));
             msg.reply(`That command threw the error: \`\`\`${e}\`\`\``);
             console.log("COMMAND ERROR:");
             console.log(e);
         }
-	    loadReact.remove();
         return;
     }
 });

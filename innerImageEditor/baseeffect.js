@@ -8,7 +8,7 @@ var image;
 exports.apply = async function (path, args, callback) {
     try {
         image = im(path);
-        if (!exports.validate(args)) throw(`Improper usage, please refer to \`\`${config.iieprefix}effecthelp ${exports.info.name}\`\``);
+        if (!exports.validate(args)) throw(new Error(`Improper usage, please refer to \`\`${config.iieprefix}effecthelp ${exports.info.name}\`\``));
         exports.effect(args);
         image.write(path, e => {
             if (!e) callback(null);
@@ -18,13 +18,13 @@ exports.apply = async function (path, args, callback) {
 }
 /// DO NOT MODIFY
 
-exports.validate = function (args) { // make sure you have the correct args
+exports.validate = function (args) {
     var good = true;
-
+    
     return good;
 }
 
-exports.effect = function (args) { // apply the effect
+exports.effect = function (args) {
 
 }
 

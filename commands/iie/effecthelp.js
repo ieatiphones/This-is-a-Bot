@@ -1,7 +1,7 @@
 const Discord = module.require("discord.js");
 const config = module.require('../../config.json');
 
-exports.run = function (bot, msg, args, IIE) {
+exports.run = function (callback, bot, msg, args, IIE) {
     var page = 0;
     var helpable = [];
     
@@ -54,6 +54,7 @@ exports.run = function (bot, msg, args, IIE) {
             }
         }
     });
+    callback();
 }
 
 exports.info = {

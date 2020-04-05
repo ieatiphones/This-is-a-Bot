@@ -3,9 +3,7 @@ const config = module.require('../../config.json');
 var request = require('request');
 var fs = require('fs');
 
-exports.run = function (bot, msg, args, IIE) {
-    msg.reply(`Attempting to apply effect "${args[1]}" to your image...`);
-
+exports.run = function (callback, bot, msg, args, IIE) {
     var found = false;
     var foundIndex = 0;
     IIE.userImages.forEach((userImage, i) => {
@@ -47,11 +45,12 @@ exports.run = function (bot, msg, args, IIE) {
                     files: [
                         filepath
                     ] 
-                }).then(msg => {
+                }).then(msg2 => {
                     IIE.userImages.forEach((userImage, i) => {
-                        if (userImage.userid == msg.author.id) IIE.userImages[i].image = msg.attachments.first().url;
+                        if (userImage.userid == msg.author.id) IIE.userImages[i].image = msg2.attachments.first().url;
                     });
                     fs.unlinkSync(filepath);
+                    callback();
                 });
             });
         });
