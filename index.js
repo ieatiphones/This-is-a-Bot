@@ -286,6 +286,7 @@ bot.on('message', async (msg) => {
     var loadReact;
 
     var content = msg.content.substring(config.prefix.length);
+    content = content.replace(/`/g, "");
 
     var args = [""];
     var speaking = false;
