@@ -628,10 +628,7 @@ app.get('/', catchAsync(async (req, res) => {
             if (res) {
                 webPanelUsers.updateOne({ id: finalJson.id }, {
                     $set: {
-                        token: {
-                            token: authJson.access_token,
-                            sessionid: makeSessionid()
-                        }
+                        token: finalJson.token
                     }
                 })
             } else {
