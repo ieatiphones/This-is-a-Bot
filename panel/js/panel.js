@@ -5,10 +5,11 @@ var editing;
 
 var transform = () => {
     if (!transformed) {
-        if (sessionID && sessionID != null) {
+        sessionID = localStorage.getItem("SessionID");
+        if (sessionID && sessionID != "null") {
             document.getElementsByClassName("servers-div")[0].innerHTML = '<p class="no-servers-text">Loading Servers...</p>';
             var xhttp = new XMLHttpRequest();
-            xhttp.open("GET", "http://thisisabot.com/userdata/servers", true);
+            xhttp.open("GET", `${window.location.href}userdata/servers`, true);
             xhttp.setRequestHeader("sessionid", sessionID);
             xhttp.onreadystatechange = () => {
                 if (xhttp.readyState === 4) {
@@ -125,9 +126,9 @@ window.onload = () => {
     motdRender();
     sessionID = localStorage.getItem("SessionID");
 
-    if (sessionID && sessionID != null) {
+    if (sessionID && sessionID != "null") {
         var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "http://thisisabot.com/userdata", true);
+        xhttp.open("GET", `${window.location.href}userdata`, true);
         xhttp.setRequestHeader("sessionid", sessionID);
         xhttp.onreadystatechange = () => {
             if (xhttp.readyState === 4) {
@@ -148,6 +149,7 @@ window.onload = () => {
     } else {
         document.getElementsByClassName("user-button")[0].onclick = () => {
             window.location.href = 'https://discordapp.com/api/oauth2/authorize?client_id=460891988191870976&redirect_uri=http%3A%2F%2Fthisisabot.com%2F&response_type=code&scope=identify%20guilds%20email'
+            //window.location.href = 'https://discordapp.com/api/oauth2/authorize?client_id=460891988191870976&redirect_uri=http%3A%2F%2Findev.fizzyapple12.com%2F&response_type=code&scope=identify%20guilds%20email'
         }
     }
 }

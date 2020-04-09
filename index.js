@@ -138,7 +138,7 @@ fs.readdir("./commands/owner", (err, fls) => {
 })
 
 bot.on('message', async (msg) => {
-    if (msg.author.id == config.botID) return;
+    if (msg.author.id == bot.user.id) return;
 
     try {
         if (msg.mentions.everyone || msg.mentions.members.has(bot.user.id)) {
@@ -601,6 +601,7 @@ app.get('/', catchAsync(async (req, res) => {
     }
     const code = req.query.code;
     const creds = btoa(`${config.clientid}:${configPrivate.clientsecret}`);
+    //const authReq = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=http%3A%2F%2Findev.fizzyapple12.com%2F`, 
     const authReq = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=http%3A%2F%2Fthisisabot.com%2F`,
         {
             method: 'POST',
@@ -674,7 +675,7 @@ app.get('/userdata', catchAsync(async (req, res) => {
         res.sendStatus(404);
         return
     }
-    webPanelUsers.findOne({ token: { sessionid: req.headers.sessionid } }, async (err, dres) => {
+    webPanelUsers.findOne({ "token.sessionid": req.headers.sessionid }, async (err, dres) => {
         if (err) {
             res.sendStatus(404);
             return;
@@ -706,7 +707,7 @@ app.get('/userdata/servers', catchAsync(async (req, res) => {
         return
     }
 
-    webPanelUsers.findOne({ token: { sessionid: req.headers.sessionid } }, async (err, dres) => {
+    webPanelUsers.findOne({ "token.sessionid": req.headers.sessionid } , async (err, dres) => {
         if (err) {
             res.sendStatus(404);
             return;

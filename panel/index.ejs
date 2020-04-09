@@ -9,7 +9,7 @@
         <% if (SessionID != null) { %>
             <script>
                 localStorage.setItem("SessionID", "<%= SessionID %>");
-                window.location.href = 'http://thisisabot.com';
+                window.location.href = window.location.origin;
             </script>
         <% } %>
 
