@@ -3,10 +3,13 @@ var sessionID;
 var servers;
 var editing;
 
-var transform = () => {
+var currentConfig = {};
+var currentConfigReady = false;
+
+var transform = (type) => {
     if (!transformed) {
         sessionID = localStorage.getItem("SessionID");
-        if (sessionID && sessionID != "null") {
+        if (sessionID && sessionID != "null" && type == 1) {
             document.getElementsByClassName("servers-div")[0].innerHTML = '<p class="no-servers-text">Loading Servers...</p>';
             var xhttp = new XMLHttpRequest();
             xhttp.open("GET", `${window.location.href}userdata/servers`, true);
@@ -45,18 +48,27 @@ var transform = () => {
         document.getElementsByClassName("bottom-div")[0].className = "bottom-div bottom-div-t";
         document.getElementsByClassName("join-button")[0].className = "join-button join-button-t";
         document.getElementsByClassName("panel-button")[0].className = "panel-button panel-button-t";
+        document.getElementsByClassName("support-button")[0].className = "support-button support-button-t";
+        document.getElementsByClassName("stats-button")[0].className = "stats-button stats-button-t";
         document.getElementsByClassName("info-div")[0].className = "info-div info-div-t";
+
 
         setTimeout(() => {
             document.getElementsByClassName("join-button")[0].style.display = "none";
             document.getElementsByClassName("panel-button")[0].style.display = "none";
             document.getElementsByClassName("info-div")[0].style.display = "none";
-            document.getElementsByClassName("server-editor")[0].style.display = "block";
+            switch (type) {
+                case 1:
+                    //Transform to full web panel
+                    document.getElementsByClassName("server-editor")[0].style.display = "block";
+                    document.getElementsByClassName("servers-div")[0].style.display = "block";
+                    document.getElementsByClassName("servers-div")[0].className = "servers-div servers-div-t";
+                    document.getElementsByClassName("user-button")[0].className = "user-button user-button-t";
+                    break;
+                case 2:
 
-            //Transform to full web panel
-            document.getElementsByClassName("servers-div")[0].style.display = "block";
-            document.getElementsByClassName("servers-div")[0].className = "servers-div servers-div-t";
-            document.getElementsByClassName("user-button")[0].className = "user-button user-button-t";
+                    break;
+            }
 
             setTimeout(() => {
                 transformed = true;
@@ -93,6 +105,8 @@ var untransform = () => {
             document.getElementsByClassName("bottom-div")[0].className = "bottom-div bottom-div-ut";
             document.getElementsByClassName("join-button")[0].className = "join-button join-button-ut";
             document.getElementsByClassName("panel-button")[0].className = "panel-button panel-button-ut";
+            document.getElementsByClassName("support-button")[0].className = "support-button support-button-ut";
+            document.getElementsByClassName("stats-button")[0].className = "stats-button stats-button-ut";
             document.getElementsByClassName("info-div")[0].className = "info-div info-div-ut";
 
             setTimeout(() => {
@@ -103,16 +117,35 @@ var untransform = () => {
 }
 
 var openEditor = (index) => {
+    editing = servers[index];
+    currentConfig = {};
+    currentConfigReady = false;
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", `${window.location.href}config/get`, true);
+    xhttp.setRequestHeader("serverid", editing.id);
+    xhttp.onreadystatechange = () => {
+        if (xhttp.readyState === 4) {
+            if (xhttp.status === 200) {
+                var jsonRes = JSON.parse(xhttp.responseText);
+                currentConfig = jsonRes;
+                currentConfigReady = true;
+            }
+        }
+    }
+    xhttp.send();
+
     var dontNeedShift = $(".server-box").get(index).className == "server-box shifted";
     closeEditor();
     if (!dontNeedShift) {
         $(".server-box").get(index).className = "server-box shifted";
         $(".server-box").eq(index).animate({left: "30%"}, 250, "linear");
-        editing = servers[index];
     }
 }
 
 var closeEditor = () => {
+    currentConfig = {};
+    currentConfigReady = false;
     if ($(".shifted").length != 0) {
         editing = null;
         for (var i = 0; i < $(".server-box").length; i++) {
@@ -127,29 +160,37 @@ window.onload = () => {
     sessionID = localStorage.getItem("SessionID");
 
     if (sessionID && sessionID != "null") {
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", `${window.location.href}userdata`, true);
-        xhttp.setRequestHeader("sessionid", sessionID);
-        xhttp.onreadystatechange = () => {
-            if (xhttp.readyState === 4) {
-                if (xhttp.status === 200) {
-                    var jsonRes = JSON.parse(xhttp.responseText);
-                    document.getElementsByClassName("user-button")[0].innerHTML = `<img src="https://cdn.discordapp.com/avatars/${jsonRes.id}/${jsonRes.avatar}" alt="${jsonRes.username}" class="user-button-icon">`
-                    
-                    document.getElementsByClassName("user-button")[0].onclick = () => {
-                        localStorage.removeItem("SessionID");
-                        window.location.reload();
+        try {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", `${window.location.href}userdata`, true);
+            xhttp.setRequestHeader("sessionid", sessionID);
+            xhttp.onreadystatechange = () => {
+                if (xhttp.readyState === 4) {
+                    if (xhttp.status === 200) {
+                        var jsonRes = JSON.parse(xhttp.responseText);
+                        document.getElementsByClassName("user-button")[0].innerHTML = `<img src="https://cdn.discordapp.com/avatars/${jsonRes.id}/${jsonRes.avatar}" alt="${jsonRes.username}" class="user-button-icon">`
+
+                        document.getElementsByClassName("user-button")[0].onclick = () => {
+                            localStorage.removeItem("SessionID");
+                            window.location.reload();
+                        }
+                    } else {
+                        localStorage.setItem("SessionID", null);
                     }
-                } else {
-                    localStorage.setItem("SessionID", null);
                 }
             }
+            xhttp.send();
+        } catch (e) {
+            uvFail();
         }
-        xhttp.send();
     } else {
-        document.getElementsByClassName("user-button")[0].onclick = () => {
-            window.location.href = 'https://discordapp.com/api/oauth2/authorize?client_id=460891988191870976&redirect_uri=http%3A%2F%2Fthisisabot.com%2F&response_type=code&scope=identify%20guilds%20email'
-            //window.location.href = 'https://discordapp.com/api/oauth2/authorize?client_id=460891988191870976&redirect_uri=http%3A%2F%2Findev.fizzyapple12.com%2F&response_type=code&scope=identify%20guilds%20email'
-        }
+        uvFail()
+    }
+}
+
+var uvFail = () => {
+    document.getElementsByClassName("user-button")[0].onclick = () => {
+        window.location.href = 'https://discordapp.com/api/oauth2/authorize?client_id=460891988191870976&redirect_uri=http%3A%2F%2Fthisisabot.com%2F&response_type=code&scope=identify%20guilds%20email'
+        //window.location.href = 'https://discordapp.com/api/oauth2/authorize?client_id=460891988191870976&redirect_uri=http%3A%2F%2Findev.fizzyapple12.com%2F&response_type=code&scope=identify%20guilds%20email'
     }
 }

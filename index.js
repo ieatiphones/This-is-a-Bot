@@ -181,6 +181,8 @@ bot.on('message', async (msg) => {
                 });
             }
 
+            serverPrefs.updateOne({ id: msg.guild.id }, { $set: { name: msg.guild.name } });
+
             if (currentServerConfig.config.locked) {
                 msg.delete();
                 return;
@@ -729,14 +731,11 @@ app.get('/userdata/servers', catchAsync(async (req, res) => {
                     },
                 });
             var serverResJson = await serverRes.json();
+            console.log(serverResJson)
             var finalJson = [];
             serverResJson.forEach(server => {
-                if (bot.guilds.get(server.id) && bot.guilds.get(server.id).member(config.botID)) {
-                    if (userResJson.id == config.ownerID) {
-                        finalJson.push(server);
-                    } else if (server.owner) {
-                        finalJson.push(server);
-                    }
+                if (bot.guilds.get(server.id) && (userResJson.id == config.ownerID || server.owner)) {
+                    finalJson.push(server);
                 }
             });
             if (finalJson.code != undefined && finalJson.code == 0) {
@@ -748,6 +747,60 @@ app.get('/userdata/servers', catchAsync(async (req, res) => {
         } else {
             res.sendStatus(404);
         }
+    });
+}));
+
+app.get('/config/get', catchAsync(async (req, res) => {
+    if (!req.headers || !req.headers.serverid) {
+        res.sendStatus(404);
+        return
+    }
+
+    serverPrefs.findOne({ "id": req.headers.serverid } , async (err, dres) => {
+        if (err) {
+            res.sendStatus(404);
+            return;
+        }
+        if (dres) {
+            res.set("Content-Type", "application/json");
+            res.send(dres);
+        } else {
+            res.sendStatus(404);
+        }
+    });
+}));
+
+app.post('/config/set', catchAsync(async (req, res) => {
+    if (!req.headers || !req.headers.serverid || !req.body) {
+        res.sendStatus(404);
+        return
+    }
+    if (!req.headers || !req.headers.sessionid) {
+        res.sendStatus(401);
+        return
+    }
+
+    serverPrefs.findOne({ "id": req.headers.serverid } , async (err, dres) => {
+        if (err || !dres) {
+            res.sendStatus(404);
+            return;
+        }
+
+        webPanelUsers.findOne({ "token.sessionid": req.headers.sessionid }, async (err, wres) => {
+            if (err) {
+                res.sendStatus(404);
+                return;
+            }
+            if (wres) {
+                if (bot.guilds.get(req.headers.serverid).ownerID == wres.id) {
+                    serverPrefs.updateOne({ "id": req.headers.serverid }, req.body);
+                } else {
+                    res.sendStatus(401);
+                }
+            } else {
+                res.sendStatus(404);
+            }
+        });
     });
 }));
 
