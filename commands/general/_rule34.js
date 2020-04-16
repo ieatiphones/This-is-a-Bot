@@ -3,7 +3,7 @@ const config = module.require('../../config.json');
 
 const request = module.require("request");
 
-exports.run = function (bot, msg, args, stat, music, serverPrefs) {
+exports.run = async function (bot, msg, args, stat, music, serverPrefs) {
     if (args[1] == undefined) {
         msg.reply("You must provide at least one tag to search by.")
         return;

@@ -75,6 +75,7 @@ fs.readdir("./commands/general", (err, fls) => {
             console.log('\x1b[32m%s\x1b[0m', finalSpaces + 'OK')
         } catch (e) {
             console.log('\x1b[31m%s\x1b[0m', finalSpaces + 'FAIL')
+            console.log(e);
         }
     })
 })
@@ -104,6 +105,7 @@ fs.readdir("./commands/iie", (err, fls) => {
             console.log('\x1b[32m%s\x1b[0m', finalSpaces + 'OK')
         } catch (e) {
             console.log('\x1b[31m%s\x1b[0m', finalSpaces + 'FAIL')
+            console.log(e);
         }
     })
 })
@@ -133,6 +135,7 @@ fs.readdir("./commands/owner", (err, fls) => {
             console.log('\x1b[32m%s\x1b[0m', finalSpaces + 'OK')
         } catch (e) {
             console.log('\x1b[31m%s\x1b[0m', finalSpaces + 'FAIL')
+            console.log(e);
         }
     })
 })
