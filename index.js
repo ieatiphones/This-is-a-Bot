@@ -208,6 +208,11 @@ bot.on('message', async (msg) => {
                         "id": "",
                         "func": null
                     },
+                    "nsfw": {
+                        "allow": false,
+                        "channelid": "",
+                        "setChannel": false
+                    },
                     "locked": false
                 }
             });
