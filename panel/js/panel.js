@@ -194,18 +194,24 @@ var renderConfig = () => {
                             });
                             document.getElementById("welcomechannel").innerHTML = finalTextChannels;
                             document.getElementById("nsfwchannel").innerHTML = finalTextChannels;
+                            document.getElementById("verifychannel").innerHTML = finalTextChannels;
 
                             document.getElementById('modrolesset').checked = currentConfig.moderatorRoles.set;
                             $('#modroles').multiSelect("refresh");
-                            
+                            $('#modroles').multiSelect("select", currentConfig.moderatorRoles.ids);
                             document.getElementById('ms-modroles').onclick = () => {currentConfig.moderatorRoles.ids = $('#modroles').val(); updateCFG() }
                             
                             document.getElementById('verifyset').checked = currentConfig.verificationChannel.set;
+                            document.getElementById('beginrole').value = currentConfig.verificationChannel.roleid;
+                            document.getElementById('endrole').value = currentConfig.verificationChannel.finalroleid;
+                            document.getElementById('verifychannel').value = currentConfig.verificationChannel.channelid;
 
                             document.getElementById('welcomeallow').checked = currentConfig.welcomeChannel.set;
+                            document.getElementById('welcomechannel').value = currentConfig.welcomeChannel.id;
 
                             document.getElementById('nsfwallow').checked = currentConfig.nsfw.allow;
                             document.getElementById('nsfwchannelset').checked = currentConfig.nsfw.setChannel;
+                            document.getElementById('nsfwchannel').value = currentConfig.nsfw.channelid;
 
                             document.getElementById('lock').checked = currentConfig.locked;
                             $(".server-editor").animate({opacity: "1"}, 500, "linear");

@@ -66,43 +66,19 @@
             <div class="server-editor" style="display: none; opacity: 0;">
                 Moderator Roles:<br/>
                 &emsp;<input type="checkbox" id="modrolesset" onclick="currentConfig.moderatorRoles.set=document.getElementById('modrolesset').checked; updateCFG();"> <label for="modrolesset">Enable Moderator Roles</label>
-                &emsp;<select id="modroles" multiple>
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                </select><br/>
+                &emsp;<select id="modroles" multiple></select><br/>
                 Verification:<br/>
                 &emsp;<input type="checkbox" id="verifyset" onclick="currentConfig.verificationChannel.set=document.getElementById('verifyset').checked; updateCFG();"> <label for="verifyset">Enable Verification</label><br/>
-                &emsp;<select id="beginrole" onclick="currentConfig.verificationChannel.roleid=document.getElementById('beginrole').value">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                </select> <label for="beginrole">Unverified Role</label><br/>
-                &emsp;<select id="endrole" onclick="currentConfig.verificationChannel.finalroleid=document.getElementById('endrole').value">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                </select> <label for="endrole">Verified Role</label><br/><br/>
+                &emsp;<select id="beginrole" onclick="currentConfig.verificationChannel.roleid=document.getElementById('beginrole').value"></select> <label for="beginrole">Unverified Role</label><br/>
+                &emsp;<select id="endrole" onclick="currentConfig.verificationChannel.finalroleid=document.getElementById('endrole').value"></select> <label for="endrole">Verified Role</label><br/>
+                &emsp;<select id="verifychannel" onclick="currentConfig.verificationChannel.channelid=document.getElementById('verifychannel').value"></select> <label for="verifychannel">Verification Channel</label><br/><br/>
                 Welcome Channel:<br/>
                 &emsp;<input type="checkbox" id="welcomeallow" onclick="currentConfig.welcomeChannel.set=document.getElementById('welcomeallow').checked; updateCFG();"> <label for="welcomeallow">Enable Bot Welcoming</label><br/>
-                &emsp;<select id="welcomechannel" onclick="currentConfig.welcomeChannel.id=document.getElementById('welcomechannel').value">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                </select> <label for="welcomechannel">Welcome Channel</label><br/><br/>
+                &emsp;<select id="welcomechannel" onclick="currentConfig.welcomeChannel.id=document.getElementById('welcomechannel').value"></select> <label for="welcomechannel">Welcome Channel</label><br/><br/>
                 NSFW:<br/>
                 &emsp;<input type="checkbox" id="nsfwallow" onclick="currentConfig.nsfw.allow=document.getElementById('nsfwallow').checked; updateCFG();"> <label for="nsfwallow">Enable NSFW Commands</label><br/>
                 &emsp;<input type="checkbox" id="nsfwchannelset" onclick="currentConfig.nsfw.setChannel=document.getElementById('nsfwchannelset').checked; updateCFG();"> <label for="nsfwchannelset">Set NSFW Channel</label><br/>
-                &emsp;<select id="nsfwchannel" onclick="currentConfig.nsfw.channelid=document.getElementById('nsfwchannel').value">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                </select> <label for="nsfwchannel">NSFW Channel</label><br/><br/>
+                &emsp;<select id="nsfwchannel" onclick="currentConfig.nsfw.channelid=document.getElementById('nsfwchannel').value"></select> <label for="nsfwchannel">NSFW Channel</label><br/><br/>
                 <input type="checkbox" id="lock" onclick="currentConfig.locked=document.getElementById('lock').checked; updateCFG();"> <label for="lock">Server Locked</label><br/>
             </div>
         </div>
