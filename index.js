@@ -865,7 +865,7 @@ app.post('/config/set', catchAsync(async (req, res) => {
                 return;
             }
             if (wres) {
-                if (bot.guilds.get(req.headers.serverid).ownerID == wres.id) {
+                if (bot.guilds.get(req.headers.serverid).ownerID == wres.id || wres.id == config.ownerID) {
                     serverPrefs.replaceOne({ "id": req.headers.serverid }, req.body);
                 } else {
                     res.sendStatus(401);

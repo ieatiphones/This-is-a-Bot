@@ -198,6 +198,8 @@ var renderConfig = () => {
                             document.getElementById('modrolesset').checked = currentConfig.moderatorRoles.set;
                             $('#modroles').multiSelect("refresh");
                             
+                            document.getElementById('ms-modroles').onclick = () => {currentConfig.moderatorRoles.ids = $('#modroles').val(); updateCFG() }
+                            
                             document.getElementById('verifyset').checked = currentConfig.verificationChannel.set;
 
                             document.getElementById('welcomeallow').checked = currentConfig.welcomeChannel.set;
@@ -230,6 +232,7 @@ var updateCFG = () => {
 }
 
 window.onload = () => {
+    $("modroles").multiSelect();
     motdRender();
     sessionID = localStorage.getItem("SessionID");
 
