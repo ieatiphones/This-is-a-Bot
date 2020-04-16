@@ -3,11 +3,25 @@ const config = module.require('../../config.json');
 
 const request = module.require("request");
 
-exports.run = function (bot, msg, args) {
+exports.run = function (bot, msg, args, stat, music, serverPrefs) {
     if (args[1] == undefined) {
         msg.reply("You must provide at least one tag to search by.")
         return;
     }
+
+    var currentServerConfig = await serverPrefs.findOne({ id: msg.guild.id });
+
+    if (currentServerConfig) {
+        if(!currentServerConfig.config.nsfw.allow) {
+            msg.reply("NSFW is disabled in this server.");
+            return;
+        }
+        if (currentServerConfig.config.nsfw.setChannel && msg.channel.id != currentServerConfig.config.nsfw.channelid) {
+            msg.reply(`You must use NSFW commands in <#${currentServerConfig.config.nsfw.channelid}>`);
+            return;
+        }
+    }
+
     var query = args[1].replace(/ /g, "+");
     console.log(msg.author.tag + " asked for rule34 with tags: " + args[1]);
     request('https://r34-json-api.herokuapp.com/posts?tags=' + query, (error, response, body) => {
