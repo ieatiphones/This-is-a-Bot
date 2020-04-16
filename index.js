@@ -25,6 +25,7 @@ var http = require('http');
 var server = http.Server(app);
 const btoa = require('btoa');
 var fetch = require('node-fetch');
+var bodyParser = require('body-parser')
 
 const MongoClient = require('mongodb').MongoClient;//Rexy waz here
 var mongoDB;
@@ -549,6 +550,7 @@ bot.login(configPrivate.token).catch(e => {
     console.log(e);
 });
 
+app.use(bodyParser.json());
 
 app.set('view engine', 'ejs');
 
@@ -739,7 +741,6 @@ app.get('/userdata/servers', catchAsync(async (req, res) => {
                     },
                 });
             var serverResJson = await serverRes.json();
-            console.log(serverResJson)
             var finalJson = [];
             serverResJson.forEach(server => {
                 if (bot.guilds.get(server.id) && (userResJson.id == config.ownerID || server.owner)) {
@@ -751,6 +752,70 @@ app.get('/userdata/servers', catchAsync(async (req, res) => {
             } else {
                 res.set("Content-Type", "application/json");
                 res.send(finalJson);
+            }
+        } else {
+            res.sendStatus(404);
+        }
+    });
+}));
+
+app.get('/userdata/server/roles', catchAsync(async (req, res) => {
+    if (!req.headers || !req.headers.sessionid || !req.headers.serverid) {
+        res.sendStatus(404);
+        return
+    }
+
+    webPanelUsers.findOne({ "token.sessionid": req.headers.sessionid } , async (err, dres) => {
+        if (err) {
+            res.sendStatus(404);
+            return;
+        }
+        if (dres) {
+            const serverRes = await fetch(`http://discordapp.com/api/guilds/${req.headers.serverid}/roles`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bot ${configPrivate.token}`,
+                    },
+                });
+            var serverResJson = await serverRes.json();
+            if (!serverResJson) {
+                res.sendStatus(404);
+            } else {
+                res.set("Content-Type", "application/json");
+                res.send(serverResJson);
+            }
+        } else {
+            res.sendStatus(404);
+        }
+    });
+}));
+
+app.get('/userdata/server/channels', catchAsync(async (req, res) => {
+    if (!req.headers || !req.headers.sessionid || !req.headers.serverid) {
+        res.sendStatus(404);
+        return
+    }
+
+    webPanelUsers.findOne({ "token.sessionid": req.headers.sessionid } , async (err, dres) => {
+        if (err) {
+            res.sendStatus(404);
+            return;
+        }
+        if (dres) {
+            const serverRes = await fetch(`http://discordapp.com/api/guilds/${req.headers.serverid}/channels`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bot ${configPrivate.token}`,
+                    },
+                });
+            var serverResJson = await serverRes.json();
+            if (!serverResJson) {
+                res.sendStatus(404);
+            } else {
+                res.set("Content-Type", "application/json");
+                res.send(serverResJson);
             }
         } else {
             res.sendStatus(404);
@@ -801,7 +866,7 @@ app.post('/config/set', catchAsync(async (req, res) => {
             }
             if (wres) {
                 if (bot.guilds.get(req.headers.serverid).ownerID == wres.id) {
-                    serverPrefs.updateOne({ "id": req.headers.serverid }, req.body);
+                    serverPrefs.replaceOne({ "id": req.headers.serverid }, req.body);
                 } else {
                     res.sendStatus(401);
                 }

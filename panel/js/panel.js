@@ -4,6 +4,7 @@ var servers;
 var editing;
 
 var currentConfig = {};
+var currentServerConfig = {};
 var currentConfigReady = false;
 
 var transform = (type) => {
@@ -89,6 +90,7 @@ var untransform = () => {
         //Transform to blank web panel
         document.getElementsByClassName("servers-div")[0].className = "servers-div servers-div-ut";
         document.getElementsByClassName("user-button")[0].className = "user-button user-button-ut";
+        $(".server-editor").animate({opacity: "0"}, 500, "linear");
         
         setTimeout(() => {
             document.getElementsByClassName("join-button")[0].style.display = "block";
@@ -121,6 +123,8 @@ var openEditor = (index) => {
     currentConfig = {};
     currentConfigReady = false;
 
+    var dontNeedShift = $(".server-box").get(index).className == "server-box shifted";
+
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", `${window.location.href}config/get`, true);
     xhttp.setRequestHeader("serverid", editing.id);
@@ -128,14 +132,14 @@ var openEditor = (index) => {
         if (xhttp.readyState === 4) {
             if (xhttp.status === 200) {
                 var jsonRes = JSON.parse(xhttp.responseText);
-                currentConfig = jsonRes;
+                currentServerConfig = jsonRes;
+                currentConfig = jsonRes.config;
                 currentConfigReady = true;
+                if (!dontNeedShift) renderConfig();
             }
         }
     }
-    xhttp.send();
-
-    var dontNeedShift = $(".server-box").get(index).className == "server-box shifted";
+    xhttp.send()
     closeEditor();
     if (!dontNeedShift) {
         $(".server-box").get(index).className = "server-box shifted";
@@ -145,6 +149,7 @@ var openEditor = (index) => {
 
 var closeEditor = () => {
     currentConfig = {};
+    currentServerConfig = {};
     currentConfigReady = false;
     if ($(".shifted").length != 0) {
         editing = null;
@@ -152,7 +157,76 @@ var closeEditor = () => {
             $(".server-box").eq(i).animate({left: "0%"}, 250, "linear");
             $(".server-box").get(i).className = "server-box server-box-hover";
         }
+        $(".server-editor").animate({opacity: "0"}, 500, "linear");
     }
+}
+
+var renderConfig = () => {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", `${window.location.href}userdata/server/roles`, true);
+    xhttp.setRequestHeader("sessionid", sessionID);
+    xhttp.setRequestHeader("serverid", currentServerConfig.id);
+    xhttp.onreadystatechange = () => {
+        if (xhttp.readyState === 4) {
+            if (xhttp.status === 200) {
+                var roles = JSON.parse(xhttp.responseText);
+
+                xhttp = new XMLHttpRequest();
+                xhttp.open("GET", `${window.location.href}userdata/server/channels`, true);
+                xhttp.setRequestHeader("sessionid", sessionID);
+                xhttp.setRequestHeader("serverid", currentServerConfig.id);
+                xhttp.onreadystatechange = () => {
+                    if (xhttp.readyState === 4) {
+                        if (xhttp.status === 200) {
+                            var channels = JSON.parse(xhttp.responseText);
+
+                            var finalRoles = "";
+                            roles.forEach(role => {
+                                finalRoles += `<option value="${role.id}">${role.name}</option>`;
+                            });
+                            document.getElementById("modroles").innerHTML = finalRoles;
+                            document.getElementById("beginrole").innerHTML = finalRoles;
+                            document.getElementById("endrole").innerHTML = finalRoles;
+                            
+                            var finalTextChannels = "";
+                            channels.forEach(channel => {
+                                if (channel.type == 0) finalTextChannels += `<option value="${channel.id}">${channel.name}</option>`;
+                            });
+                            document.getElementById("welcomechannel").innerHTML = finalTextChannels;
+                            document.getElementById("nsfwchannel").innerHTML = finalTextChannels;
+
+                            document.getElementById('modrolesset').checked = currentConfig.moderatorRoles.set;
+                            $('#modroles').multiSelect("refresh");
+                            
+                            document.getElementById('verifyset').checked = currentConfig.verificationChannel.set;
+
+                            document.getElementById('welcomeallow').checked = currentConfig.welcomeChannel.set;
+
+                            document.getElementById('nsfwallow').checked = currentConfig.nsfw.allow;
+                            document.getElementById('nsfwchannelset').checked = currentConfig.nsfw.setChannel;
+
+                            document.getElementById('lock').checked = currentConfig.locked;
+                            $(".server-editor").animate({opacity: "1"}, 500, "linear");
+                        }
+                    }
+                }
+                xhttp.send();
+            }
+        }
+    }
+    xhttp.send();
+}
+
+var updateCFG = () => {
+    currentServerConfig.config = currentConfig;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", `${window.location.href}config/set`, true);
+    xhttp.setRequestHeader("sessionid", sessionID);
+    xhttp.setRequestHeader("serverid", currentServerConfig.id);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    var mongosafe = currentServerConfig;
+    delete mongosafe._id;
+    xhttp.send(JSON.stringify(mongosafe));
 }
 
 window.onload = () => {

@@ -487,10 +487,25 @@ html, body {
 
 .server-editor {
     position: absolute;
-    width: calc(75% - 32px);
-    height: calc(100% - (5% + 32px));
+    width: calc(75% - 64px);
+    height: calc(100% - (5% + 48px));
     top: calc(5% + 32px);
-    left: calc(25% + 16px);
+    left: calc(25% + 48px);
+    border-radius: 16px;
+    border: 4px solid #434446;
+    background-color: #434446;
+    box-shadow: 2px 2px 5px #000000;
+    color: #ffffff;
+}
+
+#ms-modroles {
+    margin-left:16px;
+}
+
+.ms-selectable, .ms-selection, .ms-list, .ms-elem-selectable, .ms-elem-selection {
+    background-color: #434446 !important;
+    border-color: #434446;
+    color: #ffffff !important;
 }
 
 @keyframes user-button-slide-in {
