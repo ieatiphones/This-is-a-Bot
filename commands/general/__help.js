@@ -130,6 +130,7 @@ exports.run = function (bot, msg, args) {
             author: {
                 name: "Help"
             },
+            description: 'Format: "put in quotes" {optional} [required] |or|',
             fields: cmdfeilds,
             timestamp: new Date(),
             footer: {

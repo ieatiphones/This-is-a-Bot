@@ -7,7 +7,7 @@ exports.run = function (bot, msg, args) {
 
 exports.info = {
     name: 'name',
-    usage: 'name (enclose){optional}[require]|or|',
+    usage: 'name "enclose"{optional}[require]|or|',
     description: 'description',
     category: "category"
 };
