@@ -1,7 +1,7 @@
 const Discord = module.require("discord.js");
 const config = module.require('../../config.json');
 
-exports.run = function (bot, msg, args, stat) {
+exports.run = function (bot, msg, args, stat, music, serverPrefs) {
     if (!isNaN(args[1]) && !isNaN(args[2]) && !isNaN(args[3])) { //9437439
         stat.updateOne({ id: msg.author.id }, {
             $set: {
@@ -15,7 +15,14 @@ exports.run = function (bot, msg, args, stat) {
                 for (var j = 0; j < res.level - 1; j++) {
                     totalXP += (res.level * config.xpCoefficient);
                 }
-                sendCheckCard(msg, res, totalXP);
+                try {
+                    serverPrefs.findOne({ id: msg.guild.id }, (err2, res2) => {
+                        if (err2 || !res2) sendCheckCard(msg, res, totalXP, false, null);
+                        else sendCheckCard(msg, res, totalXP, true, res2);
+                    });
+                } catch (e) {
+                    sendCheckCard(msg, res, totalXP, false, null);
+                }
             } else {
                 msg.reply("Cannot find you in my database!");
             }
@@ -25,31 +32,39 @@ exports.run = function (bot, msg, args, stat) {
     }
 }
 
-var sendCheckCard = (msg, userStats, totalXP) => {
+var sendCheckCard = (msg, userStats, totalXP, server, serverStats) => {
+    var feilds = [
+        {
+            name: "Level",
+            value: userStats.level
+        },
+        {
+            name: "XP",
+            value: userStats.xp + "/" + (userStats.level * config.xpCoefficient) + "\nTotal: " + totalXP + "XP"
+        }
+    ];
+
+    if (server) feilds.push({
+        name: `${serverStats.config.pointName}s (This Server's Currency)`,
+        value: `${userStats.serverPoints[msg.guild.id]} ${serverStats.config.pointName}${(userStats.serverPoints[msg.guild.id] == 1) ? '' : 's'}`
+    });
+
+    feilds.push({
+        name: "Rank(s)",
+        value: userStats.rank + "\n" + userStats.rankSP
+    });
+
     msg.channel.send({
         embed: {
             color: userStats.color,
             title: "\"" + userStats.quote + "\"",
             author: {
-                name: msg.author.username
+                name: userStats.username
             },
             thumbnail: {
-                url: msg.author.avatarURL
+                url: userStats.iconurl
             },
-            fields: [
-                {
-                    name: "Level",
-                    value: userStats.level
-                },
-                {
-                    name: "XP",
-                    value: userStats.xp + "/" + (userStats.level * config.xpCoefficient) + "\nTotal: " + totalXP + "XP"
-                },
-                {
-                    name: "Rank(s)",
-                    value: userStats.rank + "\n" + userStats.rankSP
-                }
-            ],
+            fields: feilds,
             timestamp: new Date(),
             footer: {
                 icon_url: bot.user.avatarURL,

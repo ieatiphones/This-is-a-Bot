@@ -74,7 +74,8 @@ module.exports = async function (msg, DBI, music, IIE) {
                         "channelid": "",
                         "setChannel": false
                     },
-                    "locked": false
+                    "locked": false,
+                    "pointName": "Server Point"
                 }
             });
         }
@@ -107,7 +108,30 @@ module.exports = async function (msg, DBI, music, IIE) {
                         rank: rank
                     }
                 });
+
+                if (!res.serverPoints) {
+                    var serverPoints = {};
+                    if (msg.guild) serverPoints[msg.guild.id] = 0;
+
+                    DBI.stat.updateOne({ id: msg.author.id }, {
+                        $set: {
+                            serverPoints: serverPoints
+                        }
+                    });
+                } else if (msg.guild && !res.serverPoints[msg.guild.id]) {
+                    var serverPoints = res.serverPoints;
+                    serverPoints[msg.guild.id] = 0;
+
+                    DBI.stat.updateOne({ id: msg.author.id }, {
+                        $set: {
+                            serverPoints: serverPoints
+                        }
+                    });
+                }
             } else {
+                var serverPoints = {};
+                if (msg.guild) serverPoints[msg.guild.id] = 0;
+
                 DBI.stat.insertOne({
                     id: msg.author.id,
                     level: 1,
@@ -117,7 +141,8 @@ module.exports = async function (msg, DBI, music, IIE) {
                     color: 0,
                     quote: "You can set your quote by using $quote",
                     username: msg.author.username,
-                    iconurl: msg.author.avatarURL
+                    iconurl: msg.author.avatarURL,
+                    serverPoints: serverPoints
                 });
             }
         });
