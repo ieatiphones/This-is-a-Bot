@@ -1,4 +1,5 @@
 const config = new require('../../config.json');
+const statUtils = module.require('../../programLogic/statsUtils');
 
 const catchAsync = fn => ((req, res, next) => {
     const routePromise = fn(req, res, next);
