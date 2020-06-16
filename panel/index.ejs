@@ -79,7 +79,10 @@
                 &emsp;<input type="checkbox" id="nsfwallow" onclick="currentConfig.nsfw.allow=document.getElementById('nsfwallow').checked; updateCFG();"> <label for="nsfwallow">Enable NSFW Commands</label><br/>
                 &emsp;<input type="checkbox" id="nsfwchannelset" onclick="currentConfig.nsfw.setChannel=document.getElementById('nsfwchannelset').checked; updateCFG();"> <label for="nsfwchannelset">Set NSFW Channel</label><br/>
                 &emsp;<select id="nsfwchannel" onclick="currentConfig.nsfw.channelid=document.getElementById('nsfwchannel').value"></select> <label for="nsfwchannel">NSFW Channel</label><br/><br/>
-                <input type="checkbox" id="lock" onclick="currentConfig.locked=document.getElementById('lock').checked; updateCFG();"> <label for="lock">Server Locked</label><br/>
+                Security:<br/>
+                &emsp;<input type="checkbox" id="lock" onclick="currentConfig.locked=document.getElementById('lock').checked; updateCFG();"> <label for="lock">Server Locked</label><br/>
+                Economy:<br/>
+                &emsp;<input type="text" id="pointnameset" onkeyup="currentConfig.pointName=document.getElementById('pointnameset').value; updateCFG();"> <label for="pointnameset">Server Currency Name</label>
             </div>
         </div>
     </body>

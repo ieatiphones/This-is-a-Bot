@@ -214,6 +214,9 @@ var renderConfig = () => {
                             document.getElementById('nsfwchannel').value = currentConfig.nsfw.channelid;
 
                             document.getElementById('lock').checked = currentConfig.locked;
+
+                            document.getElementById('pointnameset').value = currentConfig.pointName;
+
                             $(".server-editor").animate({opacity: "1"}, 500, "linear");
                         }
                     }
