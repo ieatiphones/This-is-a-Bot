@@ -1,8 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
-        <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+        <meta charset="UTF-8">
+        <meta name="description" content="The website for This is a Bot">
+        <meta name="keywords" content="This is a Bot, FizzyApple12, Discord Bot, Bot, Discord">
+        <meta name="author" content="FizzyApple12">
+        <meta name="robots" content="index, follow">
+        <meta name="theme-color" content="#663399">
+        <meta name="viewport" content="width=device-width, inital-scale=1">
+        <meta name="og:title" content="This is a Bot">
+        <meta name="og:site_name" content="FizzyApple12">
+        <meta name="og:description" content="The website for This is a Bot">
+        <meta name="og:image" content="http://thisisabot.com/assets/boticon.png">
+        <meta name="og:url" content="http://thisisabot.com">
+        <meta name="og:type" content="website" />
+        <meta name="twitter:title" content="This is a Bot">
+        <meta name="twitter:description" content="The website for This is a Bot">
+        <meta name="twitter:image" content="http://thisisabot.com/assets/boticon.png">
+        <meta name="twitter:card" content="app">
+
+        <link rel="shortcut icon" type="image/png" href="http://indev.fizzyapple12.com/assets/favicon.png">
 
         <title>This is a bot</title>
 
@@ -13,12 +30,16 @@
             </script>
         <% } %>
 
-        <link rel="stylesheet" type="text/css" href="./css/index.css">
         <link rel="stylesheet" type="text/css" href="./css/multi-select.css">
-        <script src="./js/panel.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./css/index.css">
+        
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
         <script src="./js/jquery.multi-select.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+        <script src="https://bootswatch.com/_vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="./js/panel.js"></script>
 
         <script>
             var showdownOpts = {
@@ -46,43 +67,213 @@
         </script>
     </head>
     <body>
-        <div class="top-div">
-            <img src="/assets/boticon.png" alt="This is a bot's icon" class="bot-icon" onclick="untransform()">
-            <h1 class="bot-name">This is a bot</h1>
-            <h2 class="bot-description">FizzyApple12's cool bot!</h2>
-            <button class="user-button">Log in</button>
-        </div>
-        <div class="bottom-div">
-            <button class="join-button" onclick="window.location.href='https://discordapp.com/oauth2/authorize?client_id=460891988191870976&permissions=8&scope=bot'">Invite Me!</button>
-            <button class="panel-button" onclick="transform(1)">Web Panel</button><br/>
-            <button class="support-button" onclick="window.location.href='https://discord.gg/HHnFZHe'">Get Support</button>
-            <button class="stats-button" onclick="transform(2)">Stats</button>
-            <div class="info-div">
-                <p class="motd"></p>
+        <div id="vueapp">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <h4>This is a Bot&emsp;</h4>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            
+                <div class="collapse navbar-collapse" id="navbarColor03">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#home">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#webpanel">Web Panel</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
+                            <div class="dropdown-menu" style="">
+                                <a class="dropdown-item" data-toggle="modal" data-target="#statsModal" v-if="loggedIn">Stats</a>
+                                <div class="dropdown-divider" v-if="loggedIn"></div>
+                                <a class="dropdown-item" href="https://discordapp.com/api/oauth2/authorize?client_id=460891988191870976&redirect_uri=http%3A%2F%2Fthisisabot.com%2F&response_type=code&scope=identify%20guilds%20email" v-if="!loggedIn">Log In</a>
+                                <!-- <a class="dropdown-item" href="https://discordapp.com/api/oauth2/authorize?client_id=460891988191870976&redirect_uri=http%3A%2F%2Findev.fizzyapple12.com%2F&response_type=code&scope=identify%20guilds%20email" v-if="!loggedIn">Log In</a> -->
+                                <a class="dropdown-item" data-toggle="modal" data-target="#logoutModal" v-if="loggedIn">Log Out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+
+            <div id="tabContent" class="tab-content">
+                <div class="tab-pane fade active show" id="home">
+                    <h1 class="bot-name">This is a Bot</h1>
+                    <div class="bot-icon-container">
+                        <img src="/assets/boticon.png" alt="This is a Bot's Icon" class="bot-icon">
+                    </div>
+                    <h3 class="motd"></h3>
+                    <div class="button-container">
+                        <button class="btn btn-outline-bot-icon btn-lg" onclick="window.location.href='https://discordapp.com/oauth2/authorize?client_id=460891988191870976&permissions=8&scope=bot'">Invite Me!</button>
+                        <button class="btn btn-outline-success btn-lg" onclick="window.location.href='https://discord.gg/HHnFZHe'">Get Support</button>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="webpanel">
+                    <div class="manager" v-if="loggedIn && !loadingServers && !noServers">
+                        <div class="list-group server-list">
+                            <a v-for="(server, index) in servers" :onclick="`openEditor(${index})`" class="list-group-item list-group-item-action">
+                                <img v-if="server.icon" :src="`https://cdn.discordapp.com/icons/${server.id}/${server.icon}`" :alt="`${server.name}'s Icon`" class="server-icon">
+                                <img v-else src="/assets/discord-logo.png" :alt="`${server.name}'s Icon`" class="server-icon">
+                                <span class="server-name">{{ server.name }}</span>
+                            </a>
+                        </div>
+                        <div class="config-editor">
+                            <div v-show="editingConfig && !configLoading && selectedConfig" class="editor">
+
+                                
+                                <div class="card border-dark mb-3">
+                                    <div class="card-header">Moderator Roles</div>
+                                    <div class="card-body">
+
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="modrolesset" onclick="currentConfig.moderatorRoles.set=document.getElementById('modrolesset').checked; updateCFG();">
+                                            <label class="custom-control-label" for="modrolesset">Moderator Roles</label>
+                                        </div><br>
+
+                                        <select id="modroles" multiple></select>
+
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-dark mb-3">
+                                    <div class="card-header">Verification</div>
+                                    <div class="card-body">
+
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="verifyset" onclick="currentConfig.verificationChannel.set=document.getElementById('verifyset').checked; updateCFG();">
+                                            <label class="custom-control-label" for="verifyset">Verification</label>
+                                        </div><br>
+
+                                        <label class="col-form-label" for="beginrole">Join Role:</label>
+                                        <select class="custom-select" id="beginrole" onclick="currentConfig.verificationChannel.roleid=document.getElementById('beginrole').value">
+                                            <option v-for="role in roles" :value="role.id">{{role.name}}</option>
+                                        </select><br>
+
+                                        <label class="col-form-label" for="endrole">Verified Role:</label>
+                                        <select class="custom-select" id="endrole" onclick="currentConfig.verificationChannel.finalroleid=document.getElementById('endrole').value">
+                                            <option v-for="role in roles" :value="role.id">{{role.name}}</option>
+                                        </select><br>
+
+                                        <label class="col-form-label" for="verifychannel">Verification Channel:</label>
+                                        <select class="custom-select" id="verifychannel" onclick="currentConfig.verificationChannel.channelid=document.getElementById('verifychannel').value">
+                                            <option v-for="channel in textChannels" :value="channel.id">{{channel.name}}</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-dark mb-3">
+                                    <div class="card-header">Welcoming</div>
+                                    <div class="card-body">
+                                    
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="welcomeallow" onclick="currentConfig.welcomeChannel.set=document.getElementById('welcomeallow').checked; updateCFG();">
+                                            <label class="custom-control-label" for="welcomeallow">Welcome Message</label>
+                                        </div><br>
+
+                                        <label class="col-form-label" for="welcomechannel">Welcome Channel:</label>
+                                        <select class="custom-select" id="welcomechannel" onclick="currentConfig.welcomeChannel.id=document.getElementById('welcomechannel').value">
+                                            <option v-for="channel in textChannels" :value="channel.id">{{channel.name}}</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-dark mb-3">
+                                    <div class="card-header">NSFW</div>
+                                    <div class="card-body">
+                                    
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="nsfwallow" onclick="currentConfig.nsfw.allow=document.getElementById('nsfwallow').checked; updateCFG();">
+                                            <label class="custom-control-label" for="nsfwallow">NSFW</label>
+                                        </div><br>
+
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="nsfwchannelset" onclick="currentConfig.nsfw.setChannel=document.getElementById('nsfwchannelset').checked; updateCFG();">
+                                            <label class="custom-control-label" for="nsfwchannelset">Limit Channel</label>
+                                        </div><br>
+
+                                        <label class="col-form-label" for="nsfwchannel">NSFW Channel:</label>
+                                        <select class="custom-select" id="nsfwchannel" onclick="currentConfig.nsfw.channelid=document.getElementById('nsfwchannel').value; updateCFG();">
+                                            <option v-for="channel in textChannels" :value="channel.id">{{channel.name}}</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-dark mb-3">
+                                    <div class="card-header">Security</div>
+                                    <div class="card-body">
+                                    
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="lock" onclick="currentConfig.locked=document.getElementById('lock').checked; updateCFG();">
+                                            <label class="custom-control-label" for="lock">Lock</label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-dark mb-3">
+                                    <div class="card-header">Economy</div>
+                                    <div class="card-body">
+                                    
+                                        <label class="col-form-label" for="pointnameset">Currency Name:</label>
+                                        <input type="text" class="form-control" placeholder="Currency Name" id="pointnameset" onkeyup="currentConfig.pointName=document.getElementById('pointnameset').value; updateCFG();">
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div v-if="configLoading && selectedConfig" class="editor-info">
+                                <h3 class="info-2">Loading Configuration...</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning-container" v-if="!loggedIn">
+                        <h1 class="warning">You need to log in to manage servers</h1>
+                    </div>
+                    <div class="info-container" v-if="loggedIn && loadingServers && !noServers">
+                        <h1 class="info">Loading Servers...</h1>
+                    </div>
+                    <div class="info-container" v-if="loggedIn && noServers">
+                        <h1 class="info">No Servers Here</h1>
+                    </div>
+                </div>
             </div>
-            <div class="servers-div" style="display: none;">
-                <p class="no-servers-text">No servers here...</p>
+
+            <div class="modal fade" id="statsModal" tabindex="-1" role="dialog" aria-labelledby="statsModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="statsModalLabel">Your Stats</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Stats cannot be previewed at this time, please run $check in a server with This is a Bot</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="server-editor" style="display: none; opacity: 0;">
-                Moderator Roles:<br/>
-                &emsp;<input type="checkbox" id="modrolesset" onclick="currentConfig.moderatorRoles.set=document.getElementById('modrolesset').checked; updateCFG();"> <label for="modrolesset">Enable Moderator Roles</label>
-                &emsp;<select id="modroles" multiple></select><br/>
-                Verification:<br/>
-                &emsp;<input type="checkbox" id="verifyset" onclick="currentConfig.verificationChannel.set=document.getElementById('verifyset').checked; updateCFG();"> <label for="verifyset">Enable Verification</label><br/>
-                &emsp;<select id="beginrole" onclick="currentConfig.verificationChannel.roleid=document.getElementById('beginrole').value"></select> <label for="beginrole">Unverified Role</label><br/>
-                &emsp;<select id="endrole" onclick="currentConfig.verificationChannel.finalroleid=document.getElementById('endrole').value"></select> <label for="endrole">Verified Role</label><br/>
-                &emsp;<select id="verifychannel" onclick="currentConfig.verificationChannel.channelid=document.getElementById('verifychannel').value"></select> <label for="verifychannel">Verification Channel</label><br/><br/>
-                Welcome Channel:<br/>
-                &emsp;<input type="checkbox" id="welcomeallow" onclick="currentConfig.welcomeChannel.set=document.getElementById('welcomeallow').checked; updateCFG();"> <label for="welcomeallow">Enable Bot Welcoming</label><br/>
-                &emsp;<select id="welcomechannel" onclick="currentConfig.welcomeChannel.id=document.getElementById('welcomechannel').value"></select> <label for="welcomechannel">Welcome Channel</label><br/><br/>
-                NSFW:<br/>
-                &emsp;<input type="checkbox" id="nsfwallow" onclick="currentConfig.nsfw.allow=document.getElementById('nsfwallow').checked; updateCFG();"> <label for="nsfwallow">Enable NSFW Commands</label><br/>
-                &emsp;<input type="checkbox" id="nsfwchannelset" onclick="currentConfig.nsfw.setChannel=document.getElementById('nsfwchannelset').checked; updateCFG();"> <label for="nsfwchannelset">Set NSFW Channel</label><br/>
-                &emsp;<select id="nsfwchannel" onclick="currentConfig.nsfw.channelid=document.getElementById('nsfwchannel').value"></select> <label for="nsfwchannel">NSFW Channel</label><br/><br/>
-                Security:<br/>
-                &emsp;<input type="checkbox" id="lock" onclick="currentConfig.locked=document.getElementById('lock').checked; updateCFG();"> <label for="lock">Server Locked</label><br/>
-                Economy:<br/>
-                &emsp;<input type="text" id="pointnameset" onkeyup="currentConfig.pointName=document.getElementById('pointnameset').value; updateCFG();"> <label for="pointnameset">Server Currency Name</label>
+
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="logoutModalLabel">Are you sure?</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to log out?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary" onclick="logout(true)" data-dismiss="modal">Yes</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
