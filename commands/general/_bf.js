@@ -1,3 +1,5 @@
+const message = require("../../programLogic/events/message");
+
 const Discord = module.require("discord.js");
 const config = module.require('../../config.json');
 
@@ -60,6 +62,7 @@ var compile = (bfSourceCode) => {
 
 
 exports.run = async function (bot, msg, args) {
+    return message.channel.send("brainfuck has been disabled while I work in a better implementation");
     init();
     var jsCode = compile(args[1]);
     var timedOut = true;
