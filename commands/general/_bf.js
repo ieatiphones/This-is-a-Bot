@@ -62,7 +62,6 @@ var compile = (bfSourceCode) => {
 
 
 exports.run = async function (bot, msg, args) {
-    return msg.channel.send("brainfuck has been disabled while I work in a better implementation");
     init();
     var jsCode = compile(args[1]);
     var timedOut = true;
@@ -73,13 +72,7 @@ exports.run = async function (bot, msg, args) {
     }, 5000);
     Aexec(jsCode, () => {
         timedOut = false;
-
-        if (output.includes("@")) {
-            msg.channel.send('Ok, while I applaud the effort for creating a brainfuck program that pings, I am going to have to disallow that. Amazing work though.')
-            return msg.react(bot.emojis.get('728284525926547466'));
-        }
-
-        msg.channel.send(output);
+        msg.channel.send("```" + output + "```");
     });
 }
 
