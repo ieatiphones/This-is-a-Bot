@@ -70,6 +70,12 @@ exports.run = async function (bot, msg, args) {
     }, 5000);
     Aexec(jsCode, () => {
         timedOut = false;
+
+        if (output.includes("@")) {
+            msg.channel.send('Ok, while I applaud the effort for creating a brainfuck program that pings, I am going to have to disallow that. Amazing work though.')
+            return msg.react(bot.emojis.get('728284525926547466'));
+        }
+
         msg.channel.send(output);
     });
 }
