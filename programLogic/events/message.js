@@ -198,7 +198,16 @@ module.exports = async function (msg, DBI, music, IIE) {
 
     args[0] = args[0].toLowerCase();
 
-    if (args.includes("@everyone")) return;
+    var pingedSomeone = false;
+
+    args.forEach(arg => {
+        if (arg.includes("@")) pingedSomeone = true;
+    })
+
+    if (pingedSomeone) {
+        msg.channel.send('Sorry about this, but at the moment, you are not allowed to ping people in commands. Please check back later once a better fix has been completed.')
+        return msg.react(bot.emojis.get('587386664012480522'));
+    }
 
     var ownerCommand = bot.ownerCommands.find(command => command.info.name === args[0]);
     var generalCommand = bot.generalCommands.find(command => command.info.name === args[0]);
