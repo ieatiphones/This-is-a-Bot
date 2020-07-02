@@ -19,8 +19,8 @@ exports.run = function (bot, msg, args) {
 }
 
 exports.info = {
-    name: 'simple',
-    usage: 'simple "[expression]"',
+    name: 'simplify',
+    usage: 'simplify "[expression]"',
     description: 'Simplifies an expression',
     category: "math"
 };
