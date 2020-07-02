@@ -498,6 +498,18 @@
         {
             "type": "playing",
             "text": "Pokémon X"
+        },
+        {
+            "type": "listening",
+            "text": "to Xiao moan"
+        },
+        {
+            "type": "watching",
+            "text": "C-Sharp"
+        },
+        {
+            "type": "listening",
+            "text": "banana"
         }
     ],
     "motds": [
