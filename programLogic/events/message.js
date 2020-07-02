@@ -198,6 +198,8 @@ module.exports = async function (msg, DBI, music, IIE) {
 
     args[0] = args[0].toLowerCase();
 
+    if (args.includes("@everyone")) return;
+
     var ownerCommand = bot.ownerCommands.find(command => command.info.name === args[0]);
     var generalCommand = bot.generalCommands.find(command => command.info.name === args[0]);
     var iieCommand = bot.iieCommands.find(command => command.info.name === args[0]);
