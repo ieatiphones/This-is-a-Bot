@@ -4,6 +4,7 @@ const config = module.require('../../config.json');
 const request = require("request");
 
 exports.run = function (bot, msg, args) {
+    if (!args[1]) return msg.channel.send("You must provide an id to get.")
     console.log(msg.author.tag + " asked for a picture with id " + args[1] + " from Imgur");
     var query = args[1];
     request({ url: 'https://api.imgur.com/3/image/' + query, headers: { 'Authorization': 'Client-ID 9b737057c864c9b' } }, (error, response, body) => {

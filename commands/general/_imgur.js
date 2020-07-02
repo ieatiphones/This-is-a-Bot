@@ -4,6 +4,7 @@ const config = module.require('../../config.json');
 const request = require("request");
 
 exports.run = function (bot, msg, args) {
+    if (!args[1]) return msg.channel.send("You must provide tags to search by.")
     console.log(msg.author.tag + " searched for a random picture with query " + args[1] + " from Imgur");
     var query = args[1].replace(/ /g, '+');
     request({ url: 'https://api.imgur.com/3/gallery/search?q=' + query, headers: { 'Authorization': 'Client-ID 9b737057c864c9b' } }, (error, response, body) => {

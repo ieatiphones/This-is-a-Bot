@@ -4,6 +4,7 @@ const config = module.require('../../config.json');
 const request = require("request");
 
 exports.run = function (bot, msg, args) {
+    if (!args[1]) return msg.channel.send("You must provide an id to get.")
     console.log(msg.author.tag + " asked for a picture with id " + args[1] + " from Giphy");
     var query = args[1];
     request('http://api.giphy.com/v1/gifs/' + query + '?api_key=ox196Ej6TcRtsGmP6ICDAXyPVepRytuk', (error, response, body) => {
